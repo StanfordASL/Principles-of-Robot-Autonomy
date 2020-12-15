@@ -1,0 +1,290 @@
+Previously, the idea of using \textit{optimal control}\cite{Kirk2004} techniques (also referred to as \textit{trajectory optimization}) for robot motion planning and control was presented. In this chapter, the optimal control problem is revisited in more detail, including a brief discussion on the use of both \textit{indirect} and \textit{direct} methods.
+
+\notessection{Optimal Control and Trajectory Optimization}
+Consider an optimal control problem (OCP) formulated as the following optimization problem:
+\begin{equation} \label{eq:ocp}
+\begin{split}
+\underset{\bm{u},\x}{\text{minimize}} \:\: & h(\x(t_f),t_f) + \int_{t_0}^{t_f} g(\x(t),\bm{u}(t),t) dt,\\
+\text{s.t.} \:\:& \dot{\x}(t) = a(\x(t),\bm{u}(t),t), \\
+&\x(t_0) = \x_0,
+\end{split}
+\end{equation}
+where $\x \in \R^n$ is the robot state, $\bm{u} \in \R^m$ is the control input, $x_0$ is a known robot initial condition, $a(\x, \bm{u}, t)$ is a function describing the robot's dynamics, and the functions $h(\x(t_f), t_f)$ and $g(\x(t), \bm{u}(t), t)$ define the cost function\footnote{State constraints $\x(t) \in \mathcal{X}$ and control constraints $\bm{u}(t) \in \mathcal{U}$ are also often included in practice, but for simplicity are not included here.}.
+The goal is to solve the optimal control problem \eqref{eq:ocp} in order to define an \textit{optimal} open-loop control law of the form
+\begin{equation*}
+    \bm{u}^*(t) = f(\x(t_0), t).
+\end{equation*}
+
+Unfortunately, this optimization problem is particularly challenging to solve since it is \textit{infinite-dimensional}\footnote{It is referred to as infinite-dimensional because it is an optimization over functions and not just a finite set of parameters.}. Methods for solving \eqref{eq:ocp} can be categorized as either \textit{indirect} or \textit{direct}. Both types of methods (almost always) require some form of discretization, such that the problem can be solved numerically. However, the way in which the problem is discretized is what makes each method unique.
+
+\begin{enumerate}
+    \item \textit{Indirect methods} follow a ``first optimize, then discretize" approach. These methods first derive conditions for optimality of the original infinite-dimensional problem. A solution is then recovered by discretizing the optimality conditions.
+    \item \textit{Direct methods} follow a ``first discretize, then optimize" approach. These methods first discretize the original problem into a finite-dimensional problem (called a \textit{nonlinear program}), which is then solved numerically to recover an optimal solution.
+\end{enumerate}
+
+
+\subsection{Indirect Methods}
+As previously mentioned, indirect methods solve the optimal control problem \eqref{eq:ocp} by deriving \textit{necessary optimality conditions} (NOC). A numerical procedure is then used to find solutions that satisfy these conditions of optimality, thereby ``indirectly'' solving the original OCP. As a brief example, for unconstrained finite-dimensional optimization problems the classic first-order necessary optimality condition\footnote{It is important to note that these conditions are called necessary because they are ``necessary'', but they may not be ``sufficient''. In other words there may exist solutions that satisfy the NOCs but do not solve the original problem.} is that the gradient of the function must be zero (e.g. minimize $f(x) = x^2$ with $x \in \R$ has NOC $\frac{df}{dx} = 0$).
+
+\subsubsection{Constrained Finite-Dimensional Optimization} \label{subsubsec:constfiniteopt}
+Before discussing techniques to derive necessary optimality conditions for the infinite-dimensional OCP \eqref{eq:ocp}, it is useful to briefly examine analogous conditions in finite-dimensional optimization\cite{BoydVandenberghe2004}. Consider the equality-constrained finite-dimensional optimization problem:
+\begin{equation} \label{eq:finiteopt}
+\begin{split}
+\underset{\x}{\text{minimize}} \:\: &f(\x), \\
+\text{s.t.} \:\:&h_i(\x) = 0, \quad i = 1,\dots,m \\
+\end{split}
+\end{equation}
+with variable $\x \in \R^n$. \\
+
+Necessary optimality conditions for \eqref{eq:finiteopt} are derived by first forming a function called the Lagrangian $L(\x, \blam)$, which augments the objective function with a weighted sum of the constraint functions:
+\begin{equation} \label{eq:lagrangian}
+    L(\x,\blam) = f(\x) + \sum_{i=1}^m \lambda_i h_i(\x),
+\end{equation}
+where $\blam \in \R^m$ is a vector of \textit{Lagrange multipliers}. The NOCs are then given as:
+\begin{equation} \label{eq:finitenoc}
+\begin{split}
+\nabla_{\x} L(\x^*,\blam^*) &= 0, \\
+\nabla_{\blam} L(\x^*,\blam^*) &= 0,
+\end{split}
+\end{equation}
+which are the gradients of the Lagrangian with respect to the variables $\x$ and the multipliers $\blam$. Note that the NOCs \eqref{eq:finitenoc} are a set of $n+m$ \textit{algebraic} equations with $n+m$ unknowns. In contrast, it will be seen next that the NOCs for infinite-dimensional problems are not algebraic, but rather differential.
+
+\subsubsection{Necessary Optimality Conditions}
+Analogously to the Lagrangian \eqref{eq:lagrangian} in finite-dimensional optimization, the first step to defining the NOCs for the infinite-dimensional OCP \eqref{eq:ocp} is to define a function called the \textit{Hamiltonian}:
+\begin{equation} \label{eq:hamiltonian}
+H(\x(t), \bu(t), \p(t), t) := g(\x(t), \bu(t), t) + \p^T(t)a(\x(t), \ac(t), t),
+\end{equation}
+where $\p(t) \in \R^n$ is a multiplier referred to as a \textit{costate}. The NOCs are then given by a set of differential and algebraic equations:
+\begin{equation} \label{eq:optnoc}
+\begin{split}
+\dot{\x}^*(t) &= \frac{\partial{H}}{\partial{\p}}(\x^*(t), \bu^*(t), \p^*(t), t), \\
+\dot{\p}^*(t) &= -\frac{\partial{H}}{\partial{\x}}(\x^*(t), \bu^*(t), \p^*(t), t), \\
+0 &= \frac{\partial{H}}{\partial{\bu}}(\x^*(t), \bu^*(t), \p^*(t), t),
+\end{split}
+\end{equation}
+which must be satisfied for all $t \in [t_0, t_f]$. These NOCs consist of $2n$ first order differential equations and $m$ algebraic equations. Identifying unique solutions to the $2n$ differential equations requires $2n$ boundary conditions (actually $2n+1$ if the final time $t_f$ is not fixed). The initial condition $\x^*(t_0) = \x_0$ specifies $n$ of these conditions, and the remaining conditions are given by
+\begin{equation} \label{eq:boundarycond}
+\begin{split}
+&\big(\frac{\partial{h}}{\partial{\x}}(\x^*(t_f), t_f) - \p^*(t_f))\big)^T\delta{\x_f}\\\
+& + \big(H(\x^*(t_f), \ac^*(t_f), \p^*(t_f), t_f) +\frac{\partial{h}}{\partial{t}}(\x^*(t_f), t_f)\big)\delta t_f = 0,\\
+\end{split}
+\end{equation}
+where $\delta \x_f$ and $\delta t_f$ are referred to as \textit{variations}. If either the final time or final state is fixed in the optimal control problem the corresponding variation is forced to be zero, which changes the boundary conditions \eqref{eq:boundarycond}. The resulting boundary conditions for the four possible scenarios are now summarized:
+
+\paragraph{Fixed Final Time and Fixed Final State:} If both $t_f$ and $\x(t_f)$ are fixed, both variations $\delta t_f$ and $\delta \x_f$ are set to zero. In this case the boundary conditions \eqref{eq:boundarycond} are trivially satisfied, and the remaining boundary conditions on the NOCs \eqref{eq:optnoc} are given by:
+\begin{equation*}
+\begin{split}
+&\x^*(t_0) = \x_0, \\
+&\x^*(t_f) = \x_f.
+\end{split}
+\end{equation*}
+
+\paragraph{Fixed Final Time and Free Final State:} If only $t_f$ is fixed, then only the variation $\delta t_f = 0$. In this case the conditions \eqref{eq:boundarycond} simplify and the boundary conditions for the NOCs \eqref{eq:optnoc} are given by:
+\begin{equation*}
+\begin{split}
+&\x^*(t_0) = \x_0, \\
+&\frac{\partial h }{\partial \x} (\x^* (t_f), t_f) - \p^*(t_f) = 0.  
+\end{split}
+\end{equation*}
+
+\paragraph{Free Final Time and Fixed Final State:} If only $\x_f$ is fixed, then only the variation $\delta \x_f = 0$. In this case the conditions \eqref{eq:boundarycond} simplify and the boundary conditions for the NOCs \eqref{eq:optnoc} are given by:
+\begin{equation*}
+\begin{split}
+&\x^*(t_0) = \x_0, \\
+&\x^*(t_f) = \x_f, \\
+&H(\x^*(t_f), \ac^*(t_f), \p^*(t_f), t_f) +\frac{\partial{h}}{\partial{t}}(\x^*(t_f), t_f) = 0.  
+\end{split}
+\end{equation*}
+Note that in this case since the final time is free an additional boundary condition is added, so there are now $2n + 1$ total conditions.
+
+\paragraph{Free Final Time and Free Final State:} If neither $t_f$ or $\x(t_f)$ is fixed, then the boundary conditions for the NOCs \eqref{eq:optnoc} are given by:
+\begin{equation*}
+\begin{split}
+&\x^*(t_0) = \x_0, \\
+&\frac{\partial h }{\partial \x} (\x^* (t_f), t_f) - \p^*(t_f) = 0, \\
+&H(\x^*(t_f), \ac^*(t_f), \p^*(t_f), t_f) +\frac{\partial{h}}{\partial{t}}(\x^*(t_f), t_f) = 0.  
+\end{split}
+\end{equation*}
+Again, since the final time is free an additional boundary condition is added such that there are $2n+1$ total. Note that last two conditions are both extracted from \eqref{eq:boundarycond} because the variations $\delta \x_f$ and $\delta t_f$ are independent.
+
+\subsubsection{Two-Point Boundary Value Problems}
+Finding solutions that satisfy the necessary optimality conditions \eqref{eq:optnoc} for the optimal control problem is challenging. In particular, any solution must satisfy a set of $2n$ differential equations with boundary conditions specified at both $t_0$ and $t_f$. The problem of finding solutions to differential equations with boundary conditions specified at two points is called a \textit{two-point boundary value problem}.
+Luckily, numerical procedures have been developed for solving these types of problems. For example the \texttt{scikits.bvp\_solver} package in Python or the function \texttt{bvp4c} in Matlab implement schemes for solving these problems.
+
+Most solvers for two-point boundary value problems typically assume the NOCs \eqref{eq:optnoc} and their boundary conditions are expressed in the standard form:
+\begin{equation} \label{eq:standardtpbvp}
+\dot{\z} = g(\z, t), \quad l(\z(t_0), \z(t_f)) = 0.
+\end{equation}
+However, some types of problems may not directly fit into this standard form. For such instances, it is sometimes possible to convert a non-standard form problem into the standard form \eqref{eq:standardtpbvp} \cite{AscherRussel1981}.
+
+In optimal control settings one common case where the two-point boundary value problem cannot directly be expressed in standard form is free final time problems, where $t_f$ needs to be determined but does not have any associated dynamics. A useful trick in this case is to define a new variable $\tau = \frac{t}{t_f} \in [0,1]$ to replace the time variable $t$ (since before $t_f$ wasn't known but now $\tau_f = 1$ is known). With this new variable the following changes can be made:
+\begin{enumerate}
+    \item Replace all derivatives with respect to $t$ with derivatives with respect to $\tau$, using $\frac{d(\cdot)}{d\tau} = t_f \frac{d(\cdot)}{dt}$ (chain rule).
+    \item Introduce a ``dummy'' state $r$ that corresponds to $t_f$ with dynamics $\dot{r} = 0$.
+    \item Replace $t_f$ with $r$ in all NOCs and in all boundary conditions.
+\end{enumerate}
+The ``dummy'' state $r$ can then be included in the vector $\z$ and the NOCs expressed in the standard form \eqref{eq:standardtpbvp}. In summary, this approach can be thought of as ``tricking'' the standard-form solver to think that the final time is 1 and that $t_f$ is actually a state with dynamics (although the dynamics are $\dot{t}_f = 0$).
+
+
+\begin{example}[Free Final Time OCP] \label{ex:ocp}
+\theoremstyle{definition}
+Consider a double integrator system
+\begin{equation*}
+    \ddot{x} = u,
+\end{equation*}
+where $x \in \R$ is the state and $u \in \R$ is the control input where the control task is to find a trajectory that minimizes the cost function
+\begin{equation*}
+J = \frac{1}{2}\alpha t_f^2 + \int_{0}^{t_f} \frac{1}{2}\beta u^2(t) \mathrm{d}t,
+\end{equation*}
+and satisfies the boundary conditions
+\begin{equation*}
+x(0) = 10,\quad \dot{x}(0) = 0,\quad x(t_f) = 0,\quad \dot{x}(t_f) = 0.
+\end{equation*}
+This problem is a free final time problem with a fixed final state, and the cost is formulated to find a trajectory that minimizes a combination of the time to reach the final state and the amount of control effort required to get there. A trade-off between minimizing final time and minimizing control effort is made by adjusting the weighting parameters\footnote{What does intuition suggest the optimal behavior would be for $\alpha = 0$ or for $\beta=0$?} $\alpha$ and $\beta$. From the cost function it is apparent that:
+\begin{equation*}
+\begin{split}
+h(\x(t_f), t_f) &= \frac{1}{2}\alpha t_f^2, \quad g(\x(t), \bu(t), t) = \frac{1}{2}\beta u^2(t), 
+\end{split}
+\end{equation*}
+and the dynamics equation can be equivalently expressed as a first-order system of ODEs by setting $x_1 = x$ and $x_2 = \dot{x}$:
+\begin{equation*}
+\begin{split}
+\dot{x}_1 &= x_2, \\
+\dot{x}_2 &= u, \\
+\end{split}
+\end{equation*}
+such that $\x = [x_1, \: x_2]^T$ and the boundary conditions become:
+\begin{equation*}
+x_1(0) = 10, \quad x_2(0) = 0,\quad x_1(t_f) = 0,\quad x_2(t_f) = 0.
+\end{equation*}
+
+Now that the problem has been introduced, the first step is to derive the Hamiltonian:
+\begin{equation*}
+H = \frac{1}{2}\beta u^2 + p_1x_2 + p_2u,
+\end{equation*}
+where $p_1$ and $p_2$ are the costates. Next, the NOCs \eqref{eq:optnoc} can be derived by taking the partial derivatives of $H$ with respect to $p$, $x$, and $u$:
+\begin{equation*}
+\begin{split}
+\dot{x}_1^* &= x_2^*, \\
+\dot{x}_2^* &= u^*, \\
+\dot{p}_1^* &= 0, \\
+\dot{p}_2^* &=-p_1^*, \\
+0 & = \beta u^* + p_2^*.
+\end{split}
+\end{equation*}
+The next step is then to determine appropriate boundary conditions for the NOCs. As mentioned before, this problem is a free final time and fixed final state problem. Therefore the boundary conditions are given by
+\begin{equation*}
+\begin{split}
+&x_1^*(0) = 10, \\
+&x_2^*(0) = 0, \\
+&x_1^*(t_f) = 0, \\
+&x_2^*(t_f) = 0, \\
+&\frac{1}{2}\beta u^*(t_f)^2 + p_1^*(t_f)x_2^*(t_f)+p_2^*(t_f)u^*(t_f) + \alpha t_f = 0.
+\end{split}
+\end{equation*}
+
+Now, from the last NOC it can be seen that the optimal control $u^*$ can be solved for in terms of the costate $p_2^*$:
+\begin{equation*}
+    u^* = -\frac{1}{\beta}p_2^*.
+\end{equation*}
+This expression can then be substituted into the second NOC and into the boundary conditions. At this point the resulting two-point boundary value problem can be expressed in the standard form \eqref{eq:standardtpbvp} (by using the free final time trick previously discussed), and solved numerically. However, it also turns out that this problem is simple enough to solve analytically as well.
+
+\paragraph{Analytical Solution:} 
+Integrating the differential equations for the costates $p_1$ and $p_2$ gives:
+\begin{equation*}
+\begin{split}
+p_1^* &= C_1, \\
+p_2^* &= -C_1t + C_2, \\
+\end{split}
+\end{equation*}
+where $C_1$ and $C_2$ are constants. Therefore, the optimal control $u^*$ can be expressed as $u^* = \frac{C_1}{\beta}t - \frac{C_2}{\beta}$ and the states $x_1$ and $x_2$ can be integrated to yield:
+\begin{equation*}
+\begin{split}
+x_2^* &= \frac{C_1}{2\beta}t^2 - \frac{C_2}{\beta}t + C_3, \\
+x_1^* &= \frac{C_1}{6\beta}t^3 - \frac{C_2}{2\beta}t^2 + C_3t + C_4, \\
+\end{split}
+\end{equation*}
+where $C_3$ and $C_4$ are additional constants. There are now five unknown quantities, $C_1$, $C_2$, $C_3$, $C_4$, and $t_f$, which can be determined by leveraging the five boundary conditions. In particular from the condition $x_1^*(0) = 10$ and $x^*_2(0) = 0$ it is easy to see that $C_3 = 0$ and $C_4 = 10$. The remaining boundary conditions can then be used to analytically solve for the remaining constants, and in particular:
+\begin{equation*}
+t_f = (1800 \frac{\beta}{\alpha})^{1/5}.
+\end{equation*}
+
+For a couple of interesting insights, it can be noted that as $\beta \xrightarrow{} 0$ the cost function penalizes the final time more, and from the expression for $t_f$ we can see that $t_f \xrightarrow{} 0$. Additionally, as $\alpha \xrightarrow{} 0$ the cost function penalizes control inputs, and correspondingly it can be seen in the expression for $t_f$ that $t_f \xrightarrow{} \infty$. Further, note that the optimal control takes the form
+\begin{equation*}
+    u^*(t) = \frac{C_1}{\beta}t - \frac{C_2}{\beta}.
+\end{equation*}
+Thus the control input is linear in time and its magnitude is inversely proportional to $\beta$.
+\end{example}
+
+\subsection{Direct Methods}
+Unlike indirect methods, direct methods do not require a derivation of the necessary optimality conditions. Instead these methods directly discretize the original optimal control problem \eqref{eq:ocp} to turn it into a finite-dimensional constrained optimization problem called a \textit{nonlinear programming problem}.
+
+While several approaches for discretizing the OCP exist, one simple approach is to just use a forward Euler time discretization. Recall that the forward Euler time discretization method (the simplest of the Runge-Kutta methods) can be used to numerically solve differential equations. In particular, with the choice of a time step $h_i$ the differential equations $\dot{\x} = a(\x, \bu, t)$ are discretized as:
+\begin{equation} \label{eq:hdynamics}
+\x_{i+1} = \x_{i} + h_ia(\x_i, \bu_i, t_i),
+\end{equation}
+where $\x_i = \x(t_i)$, $\bu_i = \bu(t_i)$, and $t_{i+1} - t_i = h_i$. With this recursive expression \eqref{eq:hdynamics}, an initial condition $\x(t_0)$, and a sequence of inputs $\bu(t_i)$ for $i \geq 0$, the states $\x(t_i)$ can be computed easily.
+Suppose the optimal control problem \eqref{eq:ocp} was defined over the time interval $[t_0, t_f]$. Applying a forward Euler time discretization essentially partitions this interval into a finite set of $N$ times $\{t_0, t_1, \dots, t_N\}$ where $t_N = t_f$ and the time step between each is $h_i = t_{i+1} - t_i$. Then the parameters of the optimization problem will simply become the state and controls at these times, $\x_i = \x(t_i)$ and $\bu_i = \bu(t_i)$ for $i = 0,\dots,N$. 
+
+Rewriting the original OCP \eqref{eq:ocp} as a function of the discrete set of parameters $t_i$, $\x_i$, and $\bu_i$ will require modifications to both the constraints and to the cost function. First, the recursive formula \eqref{eq:hdynamics} is used to replace the dynamics constraint $\dot{\x} = a(\x, \bu, t)$ in the OCP\footnote{The original dynamics model $\dot{\x} = a(\x, \bu, t)$ is sometimes called the \textit{continuous time} model and the recursive formula $\x_{i+1} = \x_{i} + ha(\x_i, \bu_i, t_i)$ is called the \textit{discrete time} model.}. Updating the cost function is going to require a numerical approximation of the integral, such as by using one of the Newton-Cotes formulas. The simplest of which would yield the approximation:
+\begin{equation*}
+\int_{t_0}^{t_f} g(\x(t),\bm{u}(t),t) dt \approx \sum_{i=0}^{N-1} h_i g(\x_i,\bm{u}_i,t_i).
+\end{equation*}
+The OCP \eqref{eq:ocp} can now be expressed completely as the finite-dimensional nonlinear program (NLP):
+\begin{equation} \label{eq:nlp}
+\begin{split}
+\underset{\bm{u}_i,\x_i}{\text{minimize}} \:\: & h(\x_N,t_N) + \sum_{i=0}^{N-1} h_i g(\x_i,\bm{u}_i,t_i),\\
+\text{s.t.} \:\:& \x_{i+1} = \x_{i} + h_ia(\x_i, \bu_i, t_i), \quad i = 0, \dots, N-1, \\
+&\x_0 = \x(t_0).
+\end{split}
+\end{equation}
+
+\subsection{Consistency of Time Discretization}
+The finite-dimensional problem \eqref{eq:nlp} is only an \textit{approximation} of the original problem \eqref{eq:ocp}, so it is important to justify that this approximation method is \textit{consistent} with the original problem. This is accomplished by taking a look at the necessary optimality conditions for the NLP \eqref{eq:nlp} and comparing them to the necessary optimality conditions for the original OCP \eqref{eq:ocp}.
+
+Recall that the necessary conditions of optimality for equality-constrained finite-dimensional optimization problems have previously been discussed in Section \ref{subsubsec:constfiniteopt}. In particular, the Lagrangian is first formulated, which for \eqref{eq:nlp} takes the form:
+\begin{equation*}
+L = h(\x_N,t_N) + \sum_{i=0}^{N-1} h_i g(\x_i,\bm{u}_i,t_i) + \sum_{i=0}^{N-1} \blam_i^T(\x_{i} + h_ia(\x_i, \bu_i, t_i) - \x_{i+1}).
+\end{equation*}
+Note that even though the initial condition constraint is included in \eqref{eq:nlp} it can be ignored in the Lagrangian by simply assuming $\x_0$ is not actually a decision variable in the optimization problem (since it is fixed).
+The NOCs are then given by:
+\begin{equation} \label{eq:dirnoc}
+\begin{split}
+\nabla_{\x_i} L = h_i \frac{\partial g}{\partial \x}(\x_i, \bu_i) + h_i\big(\frac{\partial a}{\partial \x}(\x_i, \bu_i)\big)^T \blam_i + (\blam_i - \blam_{i-1}) &= 0, \quad i = 1,\dots,N-1 \\
+\nabla_{\x_N} L = \frac{\partial h}{\partial \x}(\x_N) - \blam_{N-1} &= 0, \\
+\nabla_{\bu_i} L = h_i \frac{\partial g}{\partial \bu}(\x_i, \bu_i) + h_i\big(\frac{\partial a}{\partial \bu}(\x_i, \bu_i)\big)^T \blam_i &= 0, \quad i = 0, \dots, N-1\\
+\x_{i} + h_ia(\x_i, \bu_i, t_i) - \x_{i+1} &= 0, \quad i = 0,\dots,N-1\\
+\end{split}
+\end{equation}
+
+Now, from the indirect method with equations \eqref{eq:hamiltonian}, \eqref{eq:optnoc}, and boundary conditions \eqref{eq:boundarycond} with fixed final time and free final state, the NOCs for the infinite-dimensional OCP can be written as:
+\begin{equation} \label{eq:indinoc}
+\begin{split}
+\frac{\partial g}{\partial \x}(\x(t), \bu(t)) + \big(\frac{\partial a}{\partial \x}(\x(t), \bu(t))\big)^T \p(t) + \dot{\p}(t) &= 0, \quad t \in [t_0,t_f] \\
+\frac{\partial h}{\partial \x}(\x(t_f)) - \p(t_f) &= 0, \\
+\frac{\partial g}{\partial \bu}(\x(t), \bu(t)) + \big(\frac{\partial a}{\partial \bu}(\x(t), \bu(t))\big)^T \p(t) &= 0, \quad t \in [t_0, t_f]\\
+\dot{\x}(t) - a(\x(t), \bu(t), t) &= 0, \quad t\in[t_0,t_f]\\
+\x_0 - \x(t_0) &= 0.
+\end{split}
+\end{equation}
+
+The NOCs \eqref{eq:dirnoc} for the discretized problem and the NOCs for the original OCP \eqref{eq:indinoc} are remarkably similar. In fact, the NOCs \eqref{eq:dirnoc} can be seen as themselves simply the discretized versions of \eqref{eq:indinoc}. To see this, simply perform a forward Euler discretization of the equations in \eqref{eq:indinoc} with:
+\begin{equation*}
+\begin{split}
+\dot{\p}(t) = \frac{\blam_{i} - \blam_{i-1}}{h_i}, \quad \p(t_i) = \blam_i, \quad i = 0, \dots, N-1, \\
+\dot{\x}(t) = \frac{\x_{i+1} - \x_{i}}{h_i}, \quad \x(t_i) = \x_i, \quad \bu(t_i) = \bu_i, \quad i = 0, \dots, N-1.
+\end{split}
+\end{equation*}
+Therefore, as the time step $h_i \xrightarrow{} 0$ the NOCs for the discretized (direct method) problem converge to the NOCs derived directly for the original infinite-dimensional OCP (indirect method)!
+
+\subsection{Exercises}
+\subsubsection{Optimal Control and Trajectory Optimization}
+Complete \textit{Extra Problem:  Optimal Control and Trajectory Optimization} located in the online repository:
+
+\vspace{\baselineskip}
+
+\url{https://github.com/PrinciplesofRobotAutonomy/AA274A_HW1},
+
+\vspace{\baselineskip}
+
+where you will compute a dynamically feasible and \textit{optimal} trajectory for a unicycle robot by using an indirect method to set up the necessary optimality conditions and solve them using a two-point boundary value solver.

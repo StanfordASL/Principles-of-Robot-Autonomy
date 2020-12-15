@@ -1,0 +1,223 @@
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{nameref}
+\usepackage{url}
+\usepackage[backend=biber, natbib=true, style=numeric]{biblatex}
+\usepackage{amsfonts}
+\usepackage{bm}
+\usepackage{graphicx}
+\usepackage{subcaption}
+\usepackage{accents}
+\usepackage{mathtools}
+\usepackage[utf8]{inputenc}
+\usepackage{booktabs}
+\usepackage{units}
+
+\usepackage[ruled,vlined]{algorithm2e}
+\usepackage{algpseudocode}
+
+\usepackage{xargs}
+\usepackage{xspace}
+\usepackage{colortbl}
+
+% Inserts a blank page
+\newcommand{\blankpage}{\newpage\hbox{}\thispagestyle{empty}\newpage}
+
+% Citation as sidenote
+\renewcommandx{\cite}[3][1={0pt},2={}]{\sidenote[][#1]{\fullcite[#2]{#3}}}
+
+% Generates the index
+\usepackage{makeidx}
+\makeindex
+
+% Set default
+\setkeys{Gin}{width=\linewidth,totalheight=\textheight,keepaspectratio}
+
+\usepackage{fancyvrb}
+\fvset{fontsize=\normalsize}
+
+%%%% Kevin Godny's code for title page and contents from https://groups.google.com/forum/#!topic/tufte-latex/ujdzrktC1BQ
+\makeatletter
+\renewcommand{\maketitlepage}{%
+\begingroup%
+\setlength{\parindent}{0pt}
+
+{\fontsize{24}{24}\selectfont\textit{\@author}\par}
+
+\vspace{1.75in}{\fontsize{36}{54}\selectfont\@title\par}
+
+\vspace{0.5in}{\fontsize{14}{14}\selectfont\textsf{\smallcaps{\@date}}\par}
+
+\vfill{\fontsize{14}{14}\selectfont\textit{\@publisher}\par}
+
+\thispagestyle{empty}
+\endgroup
+}
+\makeatother
+
+\titlecontents{part}%
+    [0pt]% distance from left margin
+    {\addvspace{0.5\baselineskip}}% above (global formatting of entry)
+    {\allcaps{Part~\thecontentslabel}\allcaps}% before w/ label (label = ``Part I'')
+    {\allcaps{Part~\thecontentslabel}\allcaps}% before w/o label
+    {}% filler and page (leaders and page num)
+    [\vspace*{0.5\baselineskip}]% after
+
+\titlecontents{chapter}%
+    [4em]% distance from left margin
+    {\addvspace{0.5\baselineskip}}% above (global formatting of entry)
+    {\contentslabel{2em}\textit}% before w/ label (label = ``Chapter 1'')
+    {\hspace{0em}\textit}% before w/o label
+    {\qquad\thecontentspage}% filler and page (leaders and page num)
+    [\vspace*{0.25\baselineskip}]% after
+    
+\titlecontents{section}%
+    [7em]% distance from left margin
+    {}% above (global formatting of entry)
+    {\contentslabel{2em}\textit}% before w/ label (label = ``Chapter 1'')
+    {\hspace{0em}\textit}% before w/o label
+    {\qquad\thecontentspage}% filler and page (leaders and page num)
+    [\vspace*{0.1\baselineskip}]% after
+%%%% End additional code by Kevin Godby and Joe Lorenzetti
+
+% Useful for modifying the header to include chapter title
+\renewcommand{\chaptermark}[1]{%
+\markboth{#1}{}}
+
+% Converts headings
+\let\subsubsection\subsection
+\let\subsection\section
+
+\newcommand{\notessection}[1]{\section*{#1}}
+\setcounter{secnumdepth}{2}
+
+
+% Changing the overall width of the page a bit, adding more width to text and removing from left margin. Comment this out to return to normal
+\geometry{
+  left=0.75in, % left margin
+  textwidth=30pc, % main text block
+  marginparsep=2pc, % gutter between main text block and margin notes
+  marginparwidth=12pc % width of margin notes
+}
+
+
+
+% Default fixed font does not support bold face
+\DeclareFixedFont{\ttb}{T1}{txtt}{bx}{n}{9} % for bold
+\DeclareFixedFont{\ttm}{T1}{txtt}{m}{n}{9}  % for normal
+
+% Custom colors
+\usepackage{color}
+\definecolor{deepblue}{rgb}{0,0,0.5}
+\definecolor{deepred}{rgb}{0.6,0,0}
+\definecolor{deepgreen}{rgb}{0,0.5,0}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.95}
+
+
+% Python and other code listing environment
+\usepackage{listings}
+\newcommand\pythonstyle{\lstset{
+language=Python,
+basicstyle=\ttm,
+otherkeywords={self},             % Add keywords here
+keywordstyle=\ttb\color{deepblue},
+emph={MyClass,__init__},          % Custom highlighting
+emphstyle=\ttb\color{deepred},    % Custom highlighting style
+stringstyle=\color{deepgreen},
+frame=tb,                         % Any extra options here
+backgroundcolor=\color{backcolour},
+showstringspaces=false,            % 
+breakatwhitespace=false,
+framexleftmargin=1em,
+xleftmargin=1em,
+}}
+
+\newcommand\pythonstylenoborder{\lstset{
+language=Python,
+basicstyle=\ttm,
+otherkeywords={self},             % Add keywords here
+keywordstyle=\ttb\color{deepblue},
+emph={MyClass,__init__},          % Custom highlighting
+emphstyle=\ttb\color{deepred},    % Custom highlighting style
+stringstyle=\color{deepgreen},                       % Any extra options here
+backgroundcolor=\color{backcolour},
+showstringspaces=false,            % 
+breakatwhitespace=false,
+framexleftmargin=1em,
+xleftmargin=1em,
+}}
+
+\newcommand\gencodestyle{\lstset{
+basicstyle=\ttm,
+backgroundcolor=\color{backcolour},
+showstringspaces=false,            % 
+breakatwhitespace=false,
+framexleftmargin=1em,
+xleftmargin=1em,
+}}
+
+% Python environment
+\lstnewenvironment{python}[1][]
+{
+\pythonstyle
+\lstset{#1}
+}
+{}
+
+% Python environment with no borders
+\lstnewenvironment{pythonnoborder}[1][]
+{
+\pythonstylenoborder
+\lstset{#1}
+}
+{}
+
+% Python environment
+\lstnewenvironment{gencode}[1][]
+{
+\gencodestyle
+\lstset{#1}
+}
+{}
+
+% Python for external files
+\newcommand\pythonexternal[2][]{{
+\pythonstyle
+\lstinputlisting[#1]{#2}}}
+
+% Python for inline
+\newcommand\pythoninline[1]{{\pythonstyle\lstinline!#1!}}
+
+%------------------------------
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{definition}[theorem]{Definition}
+\theoremstyle{definition}
+\newtheorem{example}{Example}[section]
+
+\DeclareMathOperator*{\argmax}{arg\,max}
+\DeclareMathOperator*{\argmin}{arg\,min}
+
+\newcommand{\mytilde}{\raise.17ex\hbox{$\scriptstyle\mathtt{\sim}$}} 
+\newcommand{\bxi}{\bm{\xi}}
+\newcommand{\x}{\bm{x}}
+\newcommand{\y}{\bm{y}}
+\newcommand{\ac}{\bm{u}}
+\newcommand{\z}{\bm{z}}
+\newcommand{\p}{\bm{p}}
+\newcommand{\blam}{\bm{\lambda}}
+\newcommand{\bnu}{\bm{\nu}}
+\newcommand{\bu}{\bm{u}}
+\newcommand{\q}{\bm{q}}
+\newcommand{\bmu}{\bm{\mu}}
+\newcommand{\bSigma}{\bm{\Sigma}}
+\newcommand{\m}{\bm{m}}
+\newcommand{\w}{\bm{w}}
+\newcommand{\bc}{\bm{c}}
+\newcommand{\btheta}{\bm{\theta}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\C}{\mathcal{C}}
+\newcommand{\Space}{\mathcal{S}}
+\newcommand{\E}{\mathbb{E}}
+\newcommand{\X}{\mathcal{X}}

@@ -1,0 +1,92 @@
+%% Unfortunately for the contents to contain
+%% the "Parts" lines successfully, hyperref
+%% needs to be disabled.
+\documentclass[nohyper,nobib]{tufte-book}
+\input{preamble.tex}
+\addbibresource{references.bib}
+
+\title{Principles of Robot\\ Autonomy}
+\author{Joseph Lorenzetti, Marco Pavone}
+\date{\today}
+
+\setcounter{tocdepth}{1}
+\renewcommand{\plainauthor}{\leftmark}
+
+\begin{document}
+
+\maketitle
+
+\input{source/intro.tex}
+
+\tableofcontents
+
+% Organized differently than lecture order!
+\part{Robot Motion Planning \& Control}
+\chapter{Mobile Robot Kinematics}
+\input{source/ch01.tex}
+\chapter{Open-Loop Motion Planning \& Control}
+\input{source/ch02.tex}
+\chapter{Closed-Loop Motion Planning \& Control}
+\input{source/ch03.tex}
+\chapter{Optimal Control and Trajectory Optimization}
+\input{source/ch04.tex}
+\chapter{Search-Based Motion Planning}
+\input{source/ch05.tex}
+\chapter{Sampling-Based Motion Planning}
+\input{source/ch06.tex}
+
+\part{Robot Perception}
+\chapter{Introduction to Robot Sensors}
+\input{source/ch07.tex}
+\chapter{Camera Models and Calibration}
+\input{source/ch08.tex}
+\chapter{Stereo Vision and Structure From Motion}
+\input{source/ch09.tex}
+\chapter{Image Processing}
+\input{source/ch10.tex}
+\chapter{Information Extraction}
+\input{source/ch11.tex}
+% \chapter{Modern Computer Vision Techniques}
+% \input{source/ch12.tex}
+
+\part{Robot Localization}
+\chapter{Introduction to Localization and Filtering}
+\input{source/ch13.tex}
+\chapter{Parametric Filters}
+\input{source/ch14.tex}
+\chapter{Nonparametric Filters}
+\input{source/ch15.tex}
+\chapter{Robot Localization}
+\input{source/ch16.tex}
+\chapter{Simultaneous Localization and Mapping (SLAM)}
+\input{source/ch17.tex}
+\chapter{Sensor Fusion}
+\input{source/ch18.tex}
+
+\part{Robot Decision Making}
+\chapter{Finite State Machines}
+\input{source/ch19.tex}
+\chapter{Sequential Decision Making}
+\input{source/ch20.tex}
+\chapter{Reinforcement Learning}
+\input{source/ch21.tex}
+% \chapter{Imitation Learning}
+% \input{source/ch22.tex}
+
+\part{Robot Software}
+\chapter{The Robot Operating System}
+\input{source/ch23.tex}
+% \chapter{Autoware}
+% \input{source/ch24.tex}
+
+% \part{Advanced Topics in Robotics}
+% \chapter{Formal Methods}
+% \input{source/ch25.tex}
+% \chapter{Robotic Manipulation}
+% \input{source/ch26.tex}
+% \chapter{Human Robot Interaction}
+% \input{source/ch27.tex}
+
+\printbibliography
+
+\end{document}
