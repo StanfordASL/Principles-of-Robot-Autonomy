@@ -21,7 +21,7 @@ The key insight of the PRM algorithm is that a complete characterization of the 
 An example of the roadmap resulting from applying this algorithm is shown in Figure \ref{fig:prm-graph}.
 \begin{figure}[ht]
   \centering
-   \includegraphics[width=0.65\textwidth]{tex/figs/ch07_figs/prm.png}
+   \includegraphics[width=0.65\textwidth]{tex/figs/ch06_figs/prm.png}
   \caption{Example solution found via the PRM algorithm. The black dots represent the randomly sampled vertices of the graph, and the grey lines represent the edges created between vertices within a predefined radius $r$ of each other. The initial configuration $q_{start}$ and goal configuration $q_{goal}$, are connected through this roadmap along the pink line, which is found by a graph-search algorithm.}
   \label{fig:prm-graph}
 \end{figure}
@@ -45,7 +45,7 @@ Note that variations on this standard algorithm exist, in particular there exist
 
 \begin{figure}[ht]
   \centering
-  \includegraphics[width=0.65\textwidth]{tex/figs/ch07_figs/rrt.png}
+  \includegraphics[width=0.65\textwidth]{tex/figs/ch06_figs/rrt.png}
   \caption{Example exploration tree by the RRT algorithm. The black dots represent points sampled at each iteration of the algorithm, which are connected to the nearest vertex that is currently part of the tree.}
   \label{fig:rrt-graph}
 \end{figure}
@@ -69,7 +69,7 @@ However, in practice using the condition \eqref{eq:bellmancost} is complicated b
 
 \begin{figure}[ht]
   \centering
-  \includegraphics[width=0.75\textwidth]{tex/figs/ch07_figs/fmt.png}
+  \includegraphics[width=0.75\textwidth]{tex/figs/ch06_figs/fmt.png}
   \caption{Example of a step in FMT*. Suppose the sample $v$ has been selected to be the next point to be added to the tree. The candidate costs $\text{Cost}(u_1, v) + c(u_1)$ and $\text{Cost}(u_2, v) + c(u_2)$ are evaluated to see which connection would minimize $c_v$. Suppose $u_2$ was selected by this criteria (i.e. $u_2$ satisfies \eqref{eq:bellmancost}), then the collision checker would see that the edge $(u_2,v)$ results in a collision and the sample $v$ would be skipped (but could be added later).}
   \label{fig:plot_idea}
 \end{figure}
@@ -91,11 +91,11 @@ Another approach to kinodynamic planning leverage \textit{steering-based} algori
 \begin{figure}[ht]
     \centering
     \begin{subfigure}[b]{0.4\linewidth}
-      \includegraphics[width=\linewidth]{tex/figs/ch07_figs/driftless.png}
+      \includegraphics[width=\linewidth]{tex/figs/ch06_figs/driftless.png}
       \caption{Reeds-Shepp car}
     \end{subfigure}
     \begin{subfigure}[b]{0.4\linewidth}
-      \includegraphics[width=\linewidth]{tex/figs/ch07_figs/drift.png}
+      \includegraphics[width=\linewidth]{tex/figs/ch06_figs/drift.png}
       \caption{Double integrator system}
     \end{subfigure}
     \caption{Results from a kinodynamic planner called Differential FMT* (DFMT*) (Schmerling et al.). The figure on the left shows the results for a Reeds-Shepp car model, and on the right is a double integrator model.}

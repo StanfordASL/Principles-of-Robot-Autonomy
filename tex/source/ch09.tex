@@ -18,7 +18,7 @@ As previously mentioned, the first step in the stereo vision process is to fuse 
 
 \begin{figure}[ht]
   \begin{center}
-	\includegraphics[width=.8\textwidth]{tex/figs/ch10_figs/stereo.png}
+	\includegraphics[width=.8\textwidth]{tex/figs/ch09_figs/stereo.png}
   \end{center}
   \caption{The point $P$ in the scene, the optical centers $O$ and $O'$ of the two cameras, and the two images $p$ and $p'$ of $P$ all lie in the same plane, referred to as the epipolar plane. The lines $l$ and $l'$ are the epipolar lines of the points $p$ and $p'$, respectively. Note that if the point $p$ is observed in one image, the corresponding point in the second image must lie on the epipolar line $l'$!}
   \label{fig:epi}
@@ -35,20 +35,20 @@ Mathematically, the epipolar constraints can be written as:
 \end{equation}
 since $\overline{Op}$, $\overline{O'p'}$, and $\overline{OO'}$ are coplanar. Assuming the world reference frame is co-located with camera 1 (with an origin at point $O$) this constraint can be written as:
 \begin{equation} \label{eq:epiconst}
-    p^T F p'=0,
+    p^\top  F p'=0,
 \end{equation}
 where $F$, referred to as the \textit{fundamental matrix}, has seven degrees of freedom and is singular. For a derivation of the epipolar constraint see Section 7.1 from Forsyth et al.\cite[]{ForsythPonce2011}. Additionally, the matrix $F$ is only dependent on the intrinsic camera parameters for each camera and the geometry that defines their relative positioning, and can be assumed to be constant. The expression for the fundamental matrix in terms of the camera intrinsic parameters is:
 \begin{equation}
-    F = K^{-T}EK'^{-1}, \quad E = \begin{bmatrix}
+    F = K^{-\top}EK'^{-1}, \quad E = \begin{bmatrix}
     0 & -t_3 & t_2 \\
     t_3 & 0 & -t_1 \\
     -t_2 & t_1 & 0
     \end{bmatrix}R,
 \end{equation}
-where $K$ and $K'$ are the intrinsic parameter matrices for cameras 1 and 2 respectively, and $R$ and $t = [t_1, t_2, t_3]^T$ are the rotation matrix and translation vector that map camera 2 frame coordinates into camera 1 frame coordinates.
-Note that with the epipolar constraint defined by the fundamental matrix \eqref{eq:epiconst}, the epipolar lines $l$ and $l'$ can be expressed by $l = Fp'$ and $l' = F^Tp$. Additionally, it can be shown that $F^Te = Fe' = 0$ where $e$ and $e'$ are the epipoles in the image frames of cameras 1 and 2, since by definition the translation vector $t$ is parallel to the coordinate vectors of the epipoles in the camera frames. This in turn guarantees that the fundamental matrix $F$ is singular.
+where $K$ and $K'$ are the intrinsic parameter matrices for cameras 1 and 2 respectively, and $R$ and $t = [t_1, t_2, t_3]^\top $ are the rotation matrix and translation vector that map camera 2 frame coordinates into camera 1 frame coordinates.
+Note that with the epipolar constraint defined by the fundamental matrix \eqref{eq:epiconst}, the epipolar lines $l$ and $l'$ can be expressed by $l = Fp'$ and $l' = F^\top p$. Additionally, it can be shown that $F^\top e = Fe' = 0$ where $e$ and $e'$ are the epipoles in the image frames of cameras 1 and 2, since by definition the translation vector $t$ is parallel to the coordinate vectors of the epipoles in the camera frames. This in turn guarantees that the fundamental matrix $F$ is singular.
 
-If the parameters $K$, $K'$, $R$, and $t$ are not already known, the fundamental matrix $F$ can be determined in a manner similar to the intrinsic parameter matrix $K$ in the previous chapter. Suppose a number of corresponding points $p^h = [u, v, 1]^T$ and $(p^h)'= [u',v',1]^T$ are known and are expressed as homogeneous coordinates. Each pair of points has to satisfy the epipolar constraint \eqref{eq:epiconst}, which can be written as:
+If the parameters $K$, $K'$, $R$, and $t$ are not already known, the fundamental matrix $F$ can be determined in a manner similar to the intrinsic parameter matrix $K$ in the previous chapter. Suppose a number of corresponding points $p^h = [u, v, 1]^\top $ and $(p^h)'= [u',v',1]^\top $ are known and are expressed as homogeneous coordinates. Each pair of points has to satisfy the epipolar constraint \eqref{eq:epiconst}, which can be written as:
 \begin{equation*}
 \begin{bmatrix}
 u & v & 1
@@ -66,7 +66,7 @@ This expression can then be equivalently expressed by reparameterizing the matri
 uu' & uv' & u & vu' & vv' & v & u' & v' & 1
 \end{bmatrix}f = 0
 \end{equation}
-where $f = [F_{11}, \:F_{12} , \: F_{13}, \:F_{21}, \:F_{22}, \:F_{23}, \:F_{31}, \:F_{32}, \:F_{33}]^T$. For $n$ known correspondences $(p,p')$ these constraints can be stacked to give:
+where $f = [F_{11}, \:F_{12} , \: F_{13}, \:F_{21}, \:F_{22}, \:F_{23}, \:F_{31}, \:F_{32}, \:F_{33}]^\top $. For $n$ known correspondences $(p,p')$ these constraints can be stacked to give:
 \begin{equation}
     Wf = 0,
 \end{equation}
@@ -92,7 +92,7 @@ Given a pair of stereo images, epipolar rectification is a transformation of eac
 For an in-depth discussion on algorithms for image rectification see \cite{Fusiello2000}\cite{LoopZhang1999}.
 \begin{figure}[ht]
   \begin{center}
-	\includegraphics[width=0.7\textwidth]{tex/figs/ch10_figs/rectification.png}  \end{center}
+	\includegraphics[width=0.7\textwidth]{tex/figs/ch09_figs/rectification.png}  \end{center}
   \caption{Epipolar rectification example from Loop et al. (1999).}
   \label{fig:rect}
 \end{figure}
@@ -104,7 +104,7 @@ Epipolar constraints and image rectification are commonly used in stereo vision 
 
 \begin{figure}[ht]
 \centering
-\includegraphics[width=0.9\textwidth]{tex/figs/ch10_figs/triangulation.png}
+\includegraphics[width=0.9\textwidth]{tex/figs/ch09_figs/triangulation.png}
 \caption{Triangulation with rectified images (horizontal view on the left, top-down view on the right).}
 \label{fig:recttri}
 \end{figure}
@@ -121,7 +121,7 @@ which can be algebraically simplified to:
 where $f$ is the focal length. Generally a small baseline $b$ will lead to larger depth errors, but a large baseline $b$ may cause features to be visible from one camera but not the other. The difference in the image coordinates, $p_u-p'_u$, is referred to as \textit{disparity}. This is an important term in stereo vision, because it is only by measuring disparity that depth information can be recovered. The disparity can also be visually represented in a \textit{disparity map} (for example see Figure \ref{fig:disparity}), which is simply a map of the disparity values for each pixel in an image. The largest disparities occur from nearby objects (i.e. since disparity is inversely proportional to $z$).
 \begin{figure}[ht]
 \centering
-\includegraphics[width=0.95\textwidth]{tex/figs/ch10_figs/disparitymap.png}
+\includegraphics[width=0.95\textwidth]{tex/figs/ch09_figs/disparitymap.png}
 \caption{Disparity map from a pair of stereo images. Notice that the lighter values of the disparity map represent larger disparity, and correspond to the point in the scene that are closer to the cameras. The black points represent points that were occluded from one of the images and therefore no correspondence could be made. Images from Scharstein et al. (2003) \nocite{ScharsteinSzeliski2003}.}
 \label{fig:disparity}
 \end{figure}
@@ -130,7 +130,7 @@ where $f$ is the focal length. Generally a small baseline $b$ will lead to large
 The structure from motion (SFM) method uses a similar principle as stereo vision, but uses \textit{one} camera to capture multiple images from different perspectives while moving within the scene. In this case, the intrinsic camera parameter matrix $K$ will be constant, but the extrinsic parameters (i.e. the rotation matrix $R$ and relative position vector $t$) will be different for each image.
 \begin{figure}[ht]
   \begin{center}
-	\includegraphics[width=0.75\textwidth]{tex/figs/ch10_figs/sfm.png}  \end{center}
+	\includegraphics[width=0.75\textwidth]{tex/figs/ch09_figs/sfm.png}  \end{center}
   \caption{A depiction of the structure from motion (SFM) method. A single camera is used to take multiple images from different perspectives, which provides enough information to reconstruct the 3D scene.}
   \label{sfm}
 \end{figure}

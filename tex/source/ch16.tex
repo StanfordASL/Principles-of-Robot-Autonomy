@@ -5,7 +5,7 @@ In this chapter a more specific definition of mobile robot localization is consi
 Localization with respect to a map can be interpreted as a problem of coordinate transformation. Maps are described in a global coordinate system, which is independent of a robot’s pose. Localization can then be viewed as the process of establishing a correspondence between the map coordinate system and the robot’s local coordinate system. Knowing this coordinate transformation then enables the robot to express the location of objects of interest within its own coordinate frame (a necessary prerequisite for robot autonomy).
 
 
-In 2D problems, knowing the pose $\x_t = (x, y, \theta)^T$ of a robot is sufficient to establish this correspondence, and an ideal sensor would directly be able to measure this pose. However in practice no such sensor exists, and therefore \textit{indirect} (often noisy) measurements $\z_t$ of the pose are used. Since it is almost impossible to be able to reliably estimate $\x_t$ from a single measurement $\z_t$, localization algorithms typically integrate additional data \textit{over time} to build reliable localization estimates. For example, consider a robot located inside a building where many corridors look alike. In this case a single sensor measurement (e.g. a range scan) is usually insufficient to disambiguate the identity of the corridor from the others.
+In 2D problems, knowing the pose $\x_t = [x, y, \theta]^\top $ of a robot is sufficient to establish this correspondence, and an ideal sensor would directly be able to measure this pose. However in practice no such sensor exists, and therefore \textit{indirect} (often noisy) measurements $\z_t$ of the pose are used. Since it is almost impossible to be able to reliably estimate $\x_t$ from a single measurement $\z_t$, localization algorithms typically integrate additional data \textit{over time} to build reliable localization estimates. For example, consider a robot located inside a building where many corridors look alike. In this case a single sensor measurement (e.g. a range scan) is usually insufficient to disambiguate the identity of the corridor from the others.
 
 In this chapter it will be seen how this map-based localization problem can be cast in the Bayesian filtering framework, such that the algorithms from previous chapters can be leveraged.
 
@@ -68,7 +68,7 @@ where $m_i$ represents the properties of a specific object. Generally there are 
 For location-based maps, the index $i$ associated with object $m_i$ corresponds to a specific \textit{location} (i.e. $m_i$ are volumetric objects). For example, objects $m_i$ in a location-based map might represent cells in a cell decomposition or grid representation of a map (see Figure \ref{fig:LocationBasedMaps}).
 \begin{figure}[ht]
 \centering
-\includegraphics[width=.75\linewidth]{tex/figs/ch17_figs/location_based_maps.png}
+\includegraphics[width=.75\linewidth]{tex/figs/ch16_figs/location_based_maps.png}
 \caption{Two examples of location-based maps, both represent the map as a set of volumetric objects (i.e. cells in these cases).}
 \label{fig:LocationBasedMaps}
 \end{figure}
@@ -79,7 +79,7 @@ One potential disadvantage of the cell-based maps is that their resolution is de
 For feature-based maps, an index $i$ is a feature index, and $m_i$ contains information about the properties of that feature, including its Cartesian location. These types of maps can typically be thought of as a collection of landmarks. Figure \ref{fig:FeatureBasedMaps} gives two examples of feature-based maps, one which is represented by a set of lines, and another which is represented by nodes and edges like a graph (i.e. a topological map).
 \begin{figure*}[ht]
 \centering
-\includegraphics[width=0.8\linewidth]{tex/figs/ch17_figs/feature_based_maps.png}
+\includegraphics[width=0.8\linewidth]{tex/figs/ch16_figs/feature_based_maps.png}
 \caption{Two examples of feature-based maps.}
 \label{fig:FeatureBasedMaps}
 \end{figure*}
@@ -111,7 +111,7 @@ In this approximation the term $p(\x_{t} \mid \m )$ is the state probability con
 
 % \begin{figure}[ht]
 % \centering
-% \includegraphics[width=.5\linewidth]{tex/figs/ch17_figs/ProbabilisticMotion.png}
+% \includegraphics[width=.5\linewidth]{tex/figs/ch16_figs/ProbabilisticMotion.png}
 % \caption{Probabilistic Motion}
 % \label{fig:ProbabilisticMotion}
 % \end{figure}
@@ -153,7 +153,7 @@ Similarly to the original Bayes' filter from previous chapters, the Markov local
 
 % \begin{figure}[ht]
 % \centering
-% \includegraphics[width=.8\linewidth]{tex/figs/ch17_figs/MarkovLocalizationPic.png}
+% \includegraphics[width=.8\linewidth]{tex/figs/ch16_figs/MarkovLocalizationPic.png}
 % \caption{Markov Localization Illustration. We consider a robot moving along a wall with three doors (a) The belief is initialized with a uniform distribution. (b) The robot moves to the first door and makes an observation. We apply the correction step to update our belief (c) The robot moves to the second door. The shifted belief is flattened because there is uncertainty with how much we moved. (d) We take a second observation, apply the correction, and obtain a large peak in the posterior belief. (e) The robot’s belief after moving further down the wall}
 % \label{fig:MarkovLocalizationPic}
 % \end{figure}
@@ -184,7 +184,7 @@ Then, given a correspondence $c^i_t$ of measurement $i$ (associated with a speci
 
 
 \subsubsection{EKF Localization with Known Correspondences}
-In practice the correspondences between measurements $\z^i_t$ and landmarks $m_j$ are generally unknown. However, it is useful from a pedagogical standpoint to first consider the case where these correspondences $\bc_t = [c_t^1,\dots]^T$ are assumed to be \textit{known}.
+In practice the correspondences between measurements $\z^i_t$ and landmarks $m_j$ are generally unknown. However, it is useful from a pedagogical standpoint to first consider the case where these correspondences $\bc_t = [c_t^1,\dots]^\top $ are assumed to be \textit{known}.
 
 In the EKF localization algorithm given in Algorithm \ref{alg:ekflocal}, the main difference from the original EKF filter algorithm is that multiple measurements are processed at the same time. Crucially, this is accomplished in a computationally efficient way by exploiting the conditional independence assumption \eqref{eq:condind} for the measurements. In fact, by exploiting this assumption and some special properties of Gaussians, the multi-measurement update can be implemented by just looping over each measurement individually and applying the standard EKF correction.
 \begin{algorithm}[ht]
@@ -234,7 +234,7 @@ Importantly, each decision variable $c_t^i$ in the maximization of this quantity
 This problem can be solved quite efficiently since it is assumed that the measurement models and belief distributions are Gaussian\footnote{Similar to the previous chapters, in this case the product of terms inside the integral will be Gaussian since both terms are Gaussian.}. In particular, the probability distribution resulting from the integral is a Gaussian with mean and covariance:
 \begin{equation*}
 \begin{split}
-\int p(\z^i_{t}\mid c^i_{t},\x_t, \m) \overline{bel}(\x_t) d\x_t \sim \mathcal{N}(h(\bar{\bmu}_t, c_t^{i}, \m), H_t^{c_t^i} \bar{\bSigma}_t [H_t^{c_t^i}]^T + \bm{Q}_t).
+\int p(\z^i_{t}\mid c^i_{t},\x_t, \m) \overline{bel}(\x_t) d\x_t \sim \mathcal{N}(h(\bar{\bmu}_t, c_t^{i}, \m), H_t^{c_t^i} \bar{\bSigma}_t [H_t^{c_t^i}]^\top  + \bm{Q}_t).
 \end{split}
 \end{equation*}
 The maximum likelihood optimization problem can therefore be expressed as:
@@ -243,10 +243,10 @@ The maximum likelihood optimization problem can therefore be expressed as:
 \hat{c}^i_{t} = \arg \max_{c^i_{t}} \:\:\mathcal{N}(\z_t^i \mid \hat{\z}^{c_t^i}_t,\: S_t^{c_t^i}), \\
 \end{split}
 \end{equation*}
-where $\hat{\z}^{j}_t = h(\bar{\bmu}_t, j, \m)$ and $S_t^j = H_t^{j} \bar{\bSigma}_t [H_t^{j}]^T + \bm{Q}_t$.
+where $\hat{\z}^{j}_t = h(\bar{\bmu}_t, j, \m)$ and $S_t^j = H_t^{j} \bar{\bSigma}_t [H_t^{j}]^\top  + \bm{Q}_t$.
 To solve this maximization problem, recall the definition of the Gaussian distribution:
 \begin{equation*}
-\mathcal{N}(\z_t^i \mid \hat{\z}^{j}_t,\: S_t^{j}) = \eta\: \text{exp}\big( -\frac{1}{2}(\z_t^i-\hat{\z}^{j}_t)^T [S_t^{j}]^{-1} (\z_t^i-\hat{\z}^{j}_t) \big),
+\mathcal{N}(\z_t^i \mid \hat{\z}^{j}_t,\: S_t^{j}) = \eta\: \text{exp}\big( -\frac{1}{2}(\z_t^i-\hat{\z}^{j}_t)^\top  [S_t^{j}]^{-1} (\z_t^i-\hat{\z}^{j}_t) \big),
 \end{equation*}
 where $\eta$ is a normalization constant. Since the exponential function is monotonically increasing and since $\eta$ is a positive constant, the maximum likelihood estimation problem can be equivalently expressed as:
 \begin{equation}
@@ -256,7 +256,7 @@ where $\eta$ is a normalization constant. Since the exponential function is mono
 \end{equation}
 where 
 \begin{equation} \label{eq:mahalanobis}
-d_t^{ij} = (\z_t^i-\hat{\z}^{j}_t)^T [S_t^{j}]^{-1} (\z_t^i-\hat{\z}^{j}_t),
+d_t^{ij} = (\z_t^i-\hat{\z}^{j}_t)^\top  [S_t^{j}]^{-1} (\z_t^i-\hat{\z}^{j}_t),
 \end{equation}
 is referred to as the \textit{Mahalanobis distance}.
 
@@ -271,7 +271,7 @@ The EKF localization algorithm with unknown correspondences is very similar to A
       $\hat{\z}_t^k = h(\bar{\bmu}_{t}, k, \m)$\\
       $S_t^k = H_t^k\bar{\bSigma}_{t}[H^k_t]^{T}+\bm{Q}_t$\\
      }
-  $j = \arg\min_k \:\: (\z_t^i-\hat{\z}^{k}_t)^T [S_t^{k}]^{-1} (\z_t^i-\hat{\z}^{k}_t)$\\
+  $j = \arg\min_k \:\: (\z_t^i-\hat{\z}^{k}_t)^\top  [S_t^{k}]^{-1} (\z_t^i-\hat{\z}^{k}_t)$\\
   $K^i_t = \bar{\bSigma}_{t}[H^j_t]^{T}[S_t^j]^{-1}$\\
   $\bar{\bmu}_t = \bar{\bmu}_t + K^i_t(\z^i_t - \hat{\z}_t^j)$\\
   $\bar{\bSigma}_t = (I - K^i_t H^j_t)\bar{\bSigma}_t$\\
@@ -287,7 +287,7 @@ The EKF localization algorithm with unknown correspondences is very similar to A
 One of the disadvantages of using the maximum likelihood estimation is that it can be brittle with respect to outliers and in cases where there are equally likely hypothesis for the correspondence.
 An alternative approach to estimating correspondences that is more robust to outliers is to use a \textit{validation gate}. In this approach the Mahalanobis smallest distance $d_t^{ij}$ must also pass a \textit{thresholding} test:
 \begin{equation*}
-(\z_t^i-\hat{\z}^{j}_t)^T [S_t^{j}]^{-1} (\z_t^i-\hat{\z}^{j}_t) \leq \gamma,
+(\z_t^i-\hat{\z}^{j}_t)^\top  [S_t^{j}]^{-1} (\z_t^i-\hat{\z}^{j}_t) \leq \gamma,
 \end{equation*}
 in order for a correspondence to be created.
 
@@ -295,9 +295,9 @@ in order for a correspondence to be created.
 
 \begin{example}[Differential Drive Robot with Range and Bearing Measurements] \label{ex:rangeandbearing}
 \theoremstyle{definition}
-Consider a differential drive robot with state $\x = [x, y, \theta]^T$, and suppose a sensor is available on the robot which measures the range $r$ and bearing $\phi$ of landmarks $m_j \in \m$ relative to the robot’s local coordinate frame. Additionally, multiple measurements corresponding to different features can be collected at each time step:
+Consider a differential drive robot with state $\x = [x, y, \theta]^\top $, and suppose a sensor is available on the robot which measures the range $r$ and bearing $\phi$ of landmarks $m_j \in \m$ relative to the robot’s local coordinate frame. Additionally, multiple measurements corresponding to different features can be collected at each time step:
 \begin{equation*}
-\z_t = \{[r_t^1,\phi_t^1]^T, [r_t^2,\phi_t^2]^T, \dots\},
+\z_t = \{[r_t^1,\phi_t^1]^\top , [r_t^2,\phi_t^2]^\top , \dots\},
 \end{equation*}
 where each measurement $\z_t^i$ contains the range $r_t^i$ and bearing $\phi_t^i$. 
 

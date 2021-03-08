@@ -5,7 +5,7 @@ The previous chapter began an introduction to the problem of robotic perception,
 As was discussed in the previous chapter, cameras provide a crucial sensing modality in the context of robotics. This is generally due to the fact that images inherently contain an enormous amount of information about the environment. However, while images do contain a lot of information, extracting the information that is relevant to the robot is quite challenging. One of the most basic tasks related to image processing is determining how a particular point in the scene maps to a point in the camera image, which is sometimes referred to as \textit{perspective projection}. Last chapter, the \textit{pinhole camera model} and the \textit{thin lens model} were presented, and in this chapter the pinhole camera model is leveraged to further explore perspective projection\footnote{All results also hold under the thin lens model, assuming the camera is focused at $\infty$.}.
 
 \begin{figure}[ht]
-\includegraphics[width=0.8\textwidth]{tex/figs/ch09_figs/pinholecamera2.png}
+\includegraphics[width=0.8\textwidth]{tex/figs/ch08_figs/pinholecamera2.png}
 \centering
 \caption{Graphical representation of the pinhole camera model. In this model the point $O_C$ is the camera center, $c$ is the image center, and $f$ is the focal length of the camera. It is assumed that all light rays from point $P$ in the scene pass through point $O_C$ and are captured on the image plane at point $p$.}
 \label{fig:pinhole_cam}
@@ -24,7 +24,7 @@ where $P_C = (X_C, Y_C, Z_C)$, $p = (x, y)$, and $f$ is the focal length of the 
 
 Note that the quantities $x$ and $y$ are coordinates in the \textit{camera frame}, but it is often desirable to express the point $p$ in terms of \textit{pixel coordinates}. However, pixel coordinates are generally defined with respect to a reference frame in the lower corner of the image plane (to avoid negative coordinates). This new reference frame is shown in Figure \ref{fig:camera_coordinates}, where the image center $c$ is defined in this new reference frame with coordinates $(\tilde{x}_0, \tilde{y}_0)$, where $\tilde{(\cdot)}$ is the notation used to denote a coordinate with respect to this new reference frame.
 \begin{figure}[ht]
-\includegraphics[width=0.55\textwidth]{tex/figs/ch09_figs/imageframe.png}
+\includegraphics[width=0.55\textwidth]{tex/figs/ch08_figs/imageframe.png}
 \centering
 \caption{A new reference frame with coordinates denoted by $\tilde{(\cdot)}$  is defined with its origin in the lower corner of the image plane. The image center coordinates in this new frame are denoted $(\tilde{x}_0, \tilde{y}_0)$.}
 \label{fig:camera_coordinates}
@@ -96,7 +96,7 @@ The matrix $K$ defined in \eqref{eq:PC2uvhomo} is sometimes referred to as the \
 Recall from Figure \ref{fig:pinhole_cam} that a point $P$ in the scene can either be expressed in terms of camera frame coordinates $P_C$ or world frame coordinates $P_W$. While the previous section discussed the use of the pinhole model to map $P_C$ coordinates to pixel coordinates $p$, this section will discuss the mapping between the camera and world frame coordinates of the point $P$ (see Figure \ref{fig:Pc2Pw}).
 \begin{figure}[ht]
 \centering
-\includegraphics[width=0.65\textwidth]{tex/figs/ch09_figs/world2camera.png}
+\includegraphics[width=0.65\textwidth]{tex/figs/ch08_figs/world2camera.png}
 \caption{A depiction of the point $P$ expressed either in camera coordinates, $P_C$, or in world frame coordinates, $P_W$. The world frame origin is denoted by $O_W$ and the camera frame origin is denoted by $O_C$.}
 \label{fig:Pc2Pw}
 \end{figure}
@@ -198,16 +198,16 @@ or equivalently (via algebraic manipulation) the expressions:
 Now, these $2n$ equations can be combined together in one large matrix equation:
 \begin{equation}
     \tilde{P}m = 0, \quad m = \begin{bmatrix}
-        m_1^T \\ m_2^T \\ m_3^T
+        m_1^\top  \\ m_2^\top  \\ m_3^\top 
     \end{bmatrix},
 \end{equation}
 where $m \in \R^{12 \times 1}$ is a vector consisting of the stacked rows of $M$ and $\tilde{P} \in \R^{2n \times 12}$ is a matrix of \textit{known} coefficients determined by the quantities $u_i$, $v_i$, and $P^h_{W,i}$. For a more concrete representation of how $\tilde{P}$ is defined, the first couple rows are given by:
 \begin{equation} \label{eq:Pmeq}
 \tilde{P} =
      \begin{bmatrix}
-  -(P_{W,1}^h)^T & 0_{1\times 4} & u_{1} (P_{W,1}^h)^T \\
-  0_{1 \times 4} & -(P_{W,1}^h)^T & v_{1} (P_{W,1}^h)^T  \\
-  -(P_{W,2}^h)^T & 0_{1\times 4} & u_{2} (P_{W,2}^h)^T \\
+  -(P_{W,1}^h)^\top  & 0_{1\times 4} & u_{1} (P_{W,1}^h)^\top  \\
+  0_{1 \times 4} & -(P_{W,1}^h)^\top  & v_{1} (P_{W,1}^h)^\top   \\
+  -(P_{W,2}^h)^\top  & 0_{1\times 4} & u_{2} (P_{W,2}^h)^\top  \\
   \vdots & \vdots & \vdots
  \end{bmatrix}.
 \end{equation}
@@ -232,17 +232,17 @@ The constrained least squares problem
 \end{equation*}
 with $x\in \R^n$ and $A \in \R^{m \times n}$ and $m > n$ is a finite-dimensional optimization problem. Consider the corresponding Lagrangian:
 \begin{equation*}
-L = x^T A^TAx + \lambda (1 - x^Tx),
+L = x^\top  A^\top Ax + \lambda (1 - x^\top x),
 \end{equation*}
 and the necessary optimality conditions:
 \begin{equation*}
 \begin{split}
-\nabla_x L &= 2(A^TA - \lambda I)x = 0, \\
-\nabla_\lambda L &= 1 - x^Tx = 0. \\
+\nabla_x L &= 2(A^\top A - \lambda I)x = 0, \\
+\nabla_\lambda L &= 1 - x^\top x = 0. \\
 \end{split}
 \end{equation*}
-The first NOC can be rewritten as $A^TA x = \lambda x$, and therefore any $x$ that satisfies this condition must be an eigenvector of the matrix $A^TA$. Additionally, while all the eigenvectors satisfy this condition the minimizer is the eigenvector associated with the smallest eigenvalue.
-This eigenvector can efficiently be computed by a singular value decomposition of $A = U\Sigma V^T$ and then choosing $m$ to be the column of $V$ associated with the smallest singular value (since $A^TA = V\Sigma^2 V^T$).
+The first NOC can be rewritten as $A^\top A x = \lambda x$, and therefore any $x$ that satisfies this condition must be an eigenvector of the matrix $A^\top A$. Additionally, while all the eigenvectors satisfy this condition the minimizer is the eigenvector associated with the smallest eigenvalue.
+This eigenvector can efficiently be computed by a singular value decomposition of $A = U\Sigma V^\top $ and then choosing $m$ to be the column of $V$ associated with the smallest singular value (since $A^\top A = V\Sigma^2 V^\top $).
 \end{example}
 
 \subsubsection{Direct Linear Calibration: Step 2}
@@ -279,7 +279,7 @@ with
     r_1 & r_2 & t
 \end{bmatrix}, \quad \tilde{P}_W^h = \begin{bmatrix}
     X_W & Y_W & 1
-\end{bmatrix}^T,
+\end{bmatrix}^\top ,
 \end{equation}
 where $\tilde{M}$ is the simplified homography matrix, $\tilde{P}_W^h$ is the simplified position of the point $P$ in world frame written in homogeneous coordinates, and $r_i$ is the $i$-th column of the rotation matrix $R$. Note that the homography matrix $\tilde{M}$ can still be estimated using the same procedure discussed before.
 
@@ -293,39 +293,39 @@ A set of constraints on the intrinsic parameter matrix $K$ are next identified b
 \end{equation*}
 This relationship, and the knowledge that $r_1$ and $r_2$ are orthonormal, leads to the following constraints:
 \begin{equation} \label{eq:zhangconst}
-    \tilde{c}_1^T B \tilde{c}_2 = 0, \quad \tilde{c}_1^T B \tilde{c}_1 = \tilde{c}_2^T B \tilde{c}_2,
+    \tilde{c}_1^\top  B \tilde{c}_2 = 0, \quad \tilde{c}_1^\top  B \tilde{c}_1 = \tilde{c}_2^\top  B \tilde{c}_2,
 \end{equation}
-where $B = K^{-T}K^{-1} \in \R^{3 \times 3}$ is a \textit{symmetric} matrix. Solving for the intrinsic camera parameters $K$ can therefore be accomplished by using the constraints \eqref{eq:zhangconst} to solve for the symmetric matrix $B$, and then to use the definition of $B$ to back out the parameters that define $K$.
+where $B = K^{-\top}K^{-1} \in \R^{3 \times 3}$ is a \textit{symmetric} matrix. Solving for the intrinsic camera parameters $K$ can therefore be accomplished by using the constraints \eqref{eq:zhangconst} to solve for the symmetric matrix $B$, and then to use the definition of $B$ to back out the parameters that define $K$.
 
 Several useful tricks can be employed to compute the matrix $B$ from the constraints \eqref{eq:zhangconst}. The main trick is to notice that even though $B$ consists of nine parameters, since it is symmetric only six parameters are required to fully specify it. Therefore $B \in \R^{3\times 3}$ is reparameterized as a vector $b \in \R^6$ as:
 \begin{equation}
     b = \begin{bmatrix}
         B_{11} & B_{12} & B_{22} & B_{13} & B_{23} & B_{33}
-    \end{bmatrix}^T.
+    \end{bmatrix}^\top .
 \end{equation}
-This reparameterization is useful because it allows us to rewrite the expression $\tilde{c}_i^TB\tilde{c}_j$ as:
+This reparameterization is useful because it allows us to rewrite the expression $\tilde{c}_i^\top B\tilde{c}_j$ as:
 \begin{equation}
-    \tilde{c}_i^TB\tilde{c}_j = v_{ij}^T b,
+    \tilde{c}_i^\top B\tilde{c}_j = v_{ij}^\top  b,
 \end{equation}
 where:
 \begin{equation*}
 \begin{split}
    v_{ij} = \begin{bmatrix}
         \tilde{c}_{i1}\tilde{c}_{j1}, & \tilde{c}_{i1}\tilde{c}_{j2}+\tilde{c}_{i2}\tilde{c}_{j1}, & \tilde{c}_{i2}\tilde{c}_{j2}, & \tilde{c}_{i3}\tilde{c}_{j1} + \tilde{c}_{i1}\tilde{c}_{j3}, & \tilde{c}_{i3}\tilde{c}_{j2} + \tilde{c}_{i2}\tilde{c}_{j3}, & \tilde{c}_{i3}\tilde{c}_{j3}
-    \end{bmatrix}^T,
+    \end{bmatrix}^\top ,
 \end{split}
 \end{equation*}
 where $\tilde{c}_{ik}$ is the $k$-th element of the column vector $\tilde{c}_i$ and $\tilde{c}_{jk}$ is the $k$-th element of the column vector $\tilde{c}_j$. With this reparameterization, the constraints \eqref{eq:zhangconst} can be rewritten as:
 \begin{equation*}
 \begin{split}
-\tilde{c}_1^T B \tilde{c}_2 = 0 &\implies v_{12}^Tb = 0 \\
-\tilde{c}_1^T B \tilde{c}_1 = \tilde{c}_2^T B \tilde{c}_2 &\implies (v_{11} - v_{22})^T b = 0,
+\tilde{c}_1^\top  B \tilde{c}_2 = 0 &\implies v_{12}^\top b = 0 \\
+\tilde{c}_1^\top  B \tilde{c}_1 = \tilde{c}_2^\top  B \tilde{c}_2 &\implies (v_{11} - v_{22})^\top  b = 0,
 \end{split}
 \end{equation*}
 or by combining them:
 \begin{equation} \label{eq:bconst}
     \begin{bmatrix}
-        v_{12}^T \\ (v_{11} - v_{22})^T
+        v_{12}^\top  \\ (v_{11} - v_{22})^\top 
     \end{bmatrix}b = 0,
 \end{equation}
 which is linear in the unknowns $b$. Importantly, while the homographies $M$ are different for each image, the intrinsic camera parameters (i.e. the vector $b$) are the same! Therefore for $N$ images from the same camera (but with potentially different perspectives) these constraints \eqref{eq:bconst} can be stacked to give:
@@ -365,7 +365,7 @@ As one final step, it is noted that the matrix $R$ defined with columns $r_1$, $
 \begin{equation} \label{eq:Ropt}
 \begin{split}
 \underset{R}{\text{min.}} \:\:& \lVert R - Q \rVert^2, \\
-    \text{s.t.}\:\:& R^TR = I,
+    \text{s.t.}\:\:& R^\top R = I,
 \end{split}
 \end{equation}
 where
@@ -374,7 +374,7 @@ where
         r_1 & r_2 & r_3
     \end{bmatrix}.
 \end{equation*}
-This problem is solved by choosing $R = UV^T$ where $U$ and $V$ are defined by the singular value decomposition of $Q = U\Sigma V^T$.
+This problem is solved by choosing $R = UV^\top $ where $U$ and $V$ are defined by the singular value decomposition of $Q = U\Sigma V^\top $.
 
 \subsection{Limitations}
 
@@ -382,7 +382,7 @@ This problem is solved by choosing $R = UV^T$ where $U$ and $V$ are defined by t
 The pinhole camera model provides a nominal camera model for which it is relatively straightforward to develop a mathematical model of the perspective projection. However, in practice this model is not a perfect representation of the imaging process. One such effect that is not captured by the pinhole model is \textit{radial distortion}, which is an effect seen in real lenses where either barrel distortion or pincushion distortion will affect the real pixel coordinates. Images showing both barrel and pincushion distortion are provided in Figure \ref{fig:distortion}.
 
 \begin{figure}[ht]
-\includegraphics[width=0.75\textwidth]{tex/figs/ch09_figs/lensdistortion.png}
+\includegraphics[width=0.75\textwidth]{tex/figs/ch08_figs/lensdistortion.png}
 \centering
 \caption{Different kinds of radial distortions that are seen in real lenses, which may affect the accuracy of the pinhole camera model.}
 \label{fig:distortion}

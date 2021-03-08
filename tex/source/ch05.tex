@@ -18,12 +18,12 @@ The configuration $\q$ of a robot is derivable from the full dynamics state $\x$
 
 \begin{example}[Motivating Example] \label{ex:mot}
 \theoremstyle{definition}
-Consider the L-shaped robot from Figure \ref{fig:2dworkspace} that lives in a 2D world with obstacles, and is trying to get from one point to another. Additionally, suppose this robot has a state $\x = [x,y,\theta,\dot{x}, \dot{y}, \dot{\theta}]^T$, and consider a configuration space defined by $\q = [x,y,\theta]^T$ which fully captures the robot's degrees of freedom. Since the motion planning problem in this case involves obstacle avoidance, it might be easier to just plan a sequence of configurations $\q$ that are collision free (as is shown in the right-side graphic of Figure \ref{fig:2dworkspace}).
+Consider the L-shaped robot from Figure \ref{fig:2dworkspace} that lives in a 2D world with obstacles, and is trying to get from one point to another. Additionally, suppose this robot has a state $\x = [x,y,\theta,\dot{x}, \dot{y}, \dot{\theta}]^\top $, and consider a configuration space defined by $\q = [x,y,\theta]^\top $ which fully captures the robot's degrees of freedom. Since the motion planning problem in this case involves obstacle avoidance, it might be easier to just plan a sequence of configurations $\q$ that are collision free (as is shown in the right-side graphic of Figure \ref{fig:2dworkspace}).
 
 In this case, the use of the configuration space has simplified the motion planning problem by abstracting away the consideration of the robot's dynamics. Once the geometric path has been defined in configuration space, other techniques (such as those discussed in previous chapters) could be used to perform lower-level control functions for path tracking.
 \begin{figure*}[ht] 
     \centering 
-    \includegraphics[width=0.85\linewidth]{tex/figs/ch06_figs/2d_ws_obstacles.png}
+    \includegraphics[width=0.85\linewidth]{tex/figs/ch05_figs/2d_ws_obstacles.png}
     \caption{Motivating example: motion planning in a 2D workspace with obstacles.}
     \label{fig:2dworkspace} 
 \end{figure*}
@@ -32,7 +32,7 @@ Additionally, it is important to note that the $C$-space is a subset of $\R^3$, 
 
 \begin{figure}[h]
 \begin{center}
-\includegraphics[width=0.9\textwidth]{tex/figs/ch06_figs/S1_obstacle.png}
+\includegraphics[width=0.9\textwidth]{tex/figs/ch05_figs/S1_obstacle.png}
 \caption{Example trajectory planning where the description of the configuration space using the manifold $\Space^1$ is crucial to path planning. In particular, rotating clockwise leads to collision but rotating counter-clockwise is a feasible path.}
 \label{fig:rotational-dof-fig}
 \end{center}
@@ -47,7 +47,7 @@ In this chapter two types of motion planning algorithms that plan in the configu
 Suppose the robot's configuration $\q$ is a $d$ dimensional vector, then the $C$-space is a subset of $\R^d$. Critically, this is a continuous space and therefore there are an infinite number of potential configurations the robot could be in. To simplify this problem, grid-based motion planners use a grid to discretize the $C$-space into a finite number of allowable configurations. For example, in a simple $C$-space in two dimensions the grid might look like that shown in Figure \ref{fig:grid}.
 \begin{figure}[ht] 
     \centering 
-    \includegraphics[width=0.65\linewidth]{tex/figs/ch06_figs/2d_ws_grid.png}
+    \includegraphics[width=0.65\linewidth]{tex/figs/ch05_figs/2d_ws_grid.png}
     \caption{Discretizing the configuration space using a grid.}
     \label{fig:grid} 
 \end{figure} 
@@ -89,7 +89,7 @@ Depth-first search in a directed graph expands each node up to the deepest level
 
 \begin{marginfigure}
 \begin{center}
-\includegraphics[width=0.95\textwidth]{tex/figs/ch06_figs/depth_first.PNG}
+\includegraphics[width=0.95\textwidth]{tex/figs/ch05_figs/depth_first.PNG}
 \caption{Depth-First Search}
 \end{center}
 \end{marginfigure}
@@ -99,7 +99,7 @@ Breadth-first search begins with the start node and explores all of its neighbor
 
 \begin{marginfigure}
 \begin{center}
-\includegraphics[width=0.95\textwidth]{tex/figs/ch06_figs/breadth_first.PNG}
+\includegraphics[width=0.95\textwidth]{tex/figs/ch05_figs/breadth_first.PNG}
 \caption{Breadth First Search}
 \end{center}
 \end{marginfigure}
@@ -155,13 +155,13 @@ Combinatorial approaches to motion planning find paths through the continuous co
 
 \begin{figure}[ht]
  \centering
- 	\includegraphics[width=.5\textwidth]{tex/figs/ch06_figs/obs_padding.png}
+ 	\includegraphics[width=.5\textwidth]{tex/figs/ch05_figs/obs_padding.png}
 	\caption{Free (white) and forbidden spaces (grey and red) of the configuration space for a simple circular robot in a 2D world. Note that the forbidden space accounts for the physical dimensions of the robot.}
  \label{fig:collision-free-space-fig}
 \end{figure}
 \begin{figure}[ht]
 \begin{center}
-\includegraphics[width=0.75\textwidth]{tex/figs/ch06_figs/2d_ws_Cfree.png}
+\includegraphics[width=0.75\textwidth]{tex/figs/ch05_figs/2d_ws_Cfree.png}
 \caption{Once the free (white) and forbidden (grey and red) configurations have been identified, the physical dimensions of the robot can be ignored. This figure shows an example of a path planning problem in $C$-space with obstacles.}
 \label{fig:combinatorial-planning}
 \end{center}
@@ -190,7 +190,7 @@ If the forbidden space is polygonal, cell decomposition methods work pretty well
 
 \begin{figure}[ht]
 \begin{center}
-\includegraphics[width=0.74\textwidth]{tex/figs/ch06_figs/2d_cell_decomp.png}
+\includegraphics[width=0.74\textwidth]{tex/figs/ch05_figs/2d_cell_decomp.png}
 \caption{Example of 2D Cell Decomposition with $C_{free}$ colored white. A roadmap is defined as the graph $G$ with vertices shown as black dots and edges connecting them. To solve a planning problem with $q_{start}$ and $q_{goal}$ these points are first connected to the roadmap, and then the path is easily defined.}
 \label{fig:cell-decompsition}
 \end{center}

@@ -106,7 +106,7 @@ For a special class of models, which are referred to as \textit{differentially f
 \theoremstyle{definition}
 \begin{marginfigure}
     \centering 
-    \includegraphics[width=0.95\linewidth]{tex/figs/ch03_figs/car.png}
+    \includegraphics[width=0.95\linewidth]{tex/figs/ch02_figs/car.png}
     \caption{Simple model for an automobile. The state consists of the $(x,y)$ position of the center of the rear axle and the heading angle $\theta$. The control inputs are the steering angle $\phi$ and the forward velocity.}
     \label{fig:car-model} 
 \end{marginfigure} 
@@ -118,7 +118,7 @@ Consider the car model corresponding to Figure \ref{fig:car-model}:
     \dot{\theta} &= \frac{v}{L}\tan\phi, 
 \end{split}
 \end{equation}
-where $(x, y)$ is the position and $\theta$ is the orientation of the vehicle, $v$ is the speed, $\phi$ is the steering angle, and $L$ is the length of the wheelbase. The state $\x$ is therefore defined as $\x = [x, \: y, \: \theta]^T$ and the control is defined as $\bm{u} = [v, \:\phi]^T$.
+where $(x, y)$ is the position and $\theta$ is the orientation of the vehicle, $v$ is the speed, $\phi$ is the steering angle, and $L$ is the length of the wheelbase. The state $\x$ is therefore defined as $\x = [x, \: y, \: \theta]^\top $ and the control is defined as $\bm{u} = [v, \:\phi]^\top $.
 
 Suppose the motion planning task is to find a control sequence $\bm{u}(t)$ that will take the car from an initial state $\x_0$ to a final desired state $\x_{f}$. One option would be to formulate an optimal control problem with constraints $\x(t_0) = x_0$ and $\x(t_f) = \x_f$. However, it turns out that for this model there is a simpler approach. In fact, for this model it is sufficient to specify a differentiable trajectory for $x(t)$ and $y(t)$, and the remaining state variables and control inputs can be \textit{analytically} determined!
 
@@ -272,7 +272,7 @@ Luckily, for some specific systems this is easy with the appropriate choice of p
 \begin{example}[Time Scaling for Simple Car Model]
 \theoremstyle{definition} Consider again the simple car model \eqref{eq:car-dynamics} from Example \ref{ex:carflatness}. Suppose a candidate trajectory $\x_c(t)$ with control $\bm{u}_c(t)$ has been defined by leveraging the differential flatness of the model (i.e. setting up and solving \eqref{eq:diffflatlinear} and then mapping the flat outputs $\z_c(t)$ into the state and control). For this system a good choice for the path parameter is the arc-length, such that
 \begin{equation*}
-    s(t) = \int_0^t v(t') dt', \quad \dot{s}(t) = v(t).
+    s(t) = \int_0^\top  v(t') dt', \quad \dot{s}(t) = v(t).
 \end{equation*}
 
 With this choice of path parameter the geometric path function $\x_c(s)$, $s_0 = 0$, and $s_f = L_{\text{path}}$ are all fixed (where $L_{\text{path}}$ is the total length of the path). Rewriting the dynamics \eqref{eq:stildedynamics} based on the simple car model:
@@ -299,11 +299,11 @@ This is interesting because it means that the equations are all satisfied \texti
 \end{example}
 
 
-\paragraph{Time Scaling with Kinematic Models:} Time-scaling trajectories is much more straightforward when kinematic models are used. Consider the case where the model of the system is derived from $k$ Pfaffian constraints $\bm{A}^T(\x)\dot{\x} = 0$. In this case the kinematic model can be written in the form:
+\paragraph{Time Scaling with Kinematic Models:} Time-scaling trajectories is much more straightforward when kinematic models are used. Consider the case where the model of the system is derived from $k$ Pfaffian constraints $\bm{A}^\top (\x)\dot{\x} = 0$. In this case the kinematic model can be written in the form:
 \begin{equation} \label{eq:kinmodel}
     \dot{\x} = G(\x) \bu,
 \end{equation}
-where the columns of the matrix $G(\x)$ span the null space of the matrix $A^T(\x)$. Now again consider a path parameter $s$ that is used to reparameterize trajectories $\x(t)$ as $\x(s(t))$, and satisfies $s(0) = s_0$, $s(T) = s_f$, and $\dot{s}(t) > 0$\footnote{The condition $\dot{s}(t) > 0$ is critical to ensure that the function $s(t)$ is invertible. In other words, to guarantee that there is a one-to-one mapping between $t$ and $s$.}. Rewriting the time derivative of the state using the chain rule yields:
+where the columns of the matrix $G(\x)$ span the null space of the matrix $A^\top (\x)$. Now again consider a path parameter $s$ that is used to reparameterize trajectories $\x(t)$ as $\x(s(t))$, and satisfies $s(0) = s_0$, $s(T) = s_f$, and $\dot{s}(t) > 0$\footnote{The condition $\dot{s}(t) > 0$ is critical to ensure that the function $s(t)$ is invertible. In other words, to guarantee that there is a one-to-one mapping between $t$ and $s$.}. Rewriting the time derivative of the state using the chain rule yields:
 \begin{equation}
     \frac{d\x(s)}{ds} \dot{s} = G(\x) \bu(t).
 \end{equation}
@@ -333,11 +333,11 @@ Consider the kinematic unicycle model:
     \dot{\theta} &= \omega, 
 \end{split}
 \end{equation}
-where $(x, y)$ is the position and $\theta$ is the orientation, $v$ is the speed, and $\omega$ is the rotation rate. The state $\x$ is defined as $\x = [x, \: y, \: \theta]^T$ and the control is defined as $\bm{u} = [v, \:\omega]^T$.
+where $(x, y)$ is the position and $\theta$ is the orientation, $v$ is the speed, and $\omega$ is the rotation rate. The state $\x$ is defined as $\x = [x, \: y, \: \theta]^\top $ and the control is defined as $\bm{u} = [v, \:\omega]^\top $.
 
 To time-scale trajectories of this system, consider the use of arc-length as path parameter:
 \begin{equation*}
-    s(t) = \int_0^t v(\tau) d\tau, \quad \dot{s}(t) = v(t),
+    s(t) = \int_0^t  v(\tau) d\tau, \quad \dot{s}(t) = v(t),
 \end{equation*}
 such that for a trajectory defined on the interval $t \in [0,T]$ with total length $L_{\text{path}}$, the path parameter is defined with $s(0) = 0$ and $s(T) = L_{\text{path}}$.
 With this choice, the geometric controls are given by:

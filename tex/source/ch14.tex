@@ -13,12 +13,12 @@ p(x) = \frac{1}{\sqrt{2\pi \sigma^2}} e^{-\frac{1}{2}\frac{(x-\mu)^2}{\sigma^2}}
 where the parameters are the mean $\mu$ and standard deviation $\sigma$ (the quantity $\sigma^2$ is referred to as the variance). A shorthand notation for saying that a random variable $X$ is distributed according to a Gaussian (normal) distribution is $X \sim \mathcal{N}(\mu,\sigma^2)$.
 For the multi-dimensional case, the multivariate Gaussian distribution is defined by the probability density function:
 \begin{equation}
-p(\x) = \frac{1}{\sqrt{\text{det}(2\pi \bSigma)}} \text{exp}\big( -\frac{1}{2}(\x-\bmu)^T \bSigma^{-1} (\x-\bmu) \big),
+p(\x) = \frac{1}{\sqrt{\text{det}(2\pi \bSigma)}} \text{exp}\big( -\frac{1}{2}(\x-\bmu)^\top  \bSigma^{-1} (\x-\bmu) \big),
 \end{equation}
 where $\x\in \R^n$ and the parameters are the mean $\bmu \in \R^n$ and the covariance matrix $\bSigma \in \R^{n \times n}$. Again, a shorthand to say a random variable $X$ is distributed according to the multivariate Gaussian distribution is $X \sim \mathcal{N}(\bmu,\bSigma)$. These distributions are represented graphically for the univariate and bivariate case in Figure \ref{fig:Gaussians}.
 \begin{figure}[ht]
 \centering
-\includegraphics[width=.85\textwidth]{tex/figs/ch15_figs/gaussians.png}
+\includegraphics[width=.85\textwidth]{tex/figs/ch14_figs/gaussians.png}
 \caption{Univariate and multivariate Gaussian distributions.}
 \label{fig:Gaussians}
 \end{figure}
@@ -28,7 +28,7 @@ These distributions exhibit several important properties which make them particu
     \begin{equation*}
         Y = AX + b,
     \end{equation*}
-    also has a multivariate Gaussian distribution with expected value $A\bmu + b$ and covariance $A\bSigma A^T$. In other words, if $X \sim \mathcal{N}(\bmu, \bSigma)$ then $Y \sim \mathcal{N}(A\bmu+b, A\bSigma A^T)$.
+    also has a multivariate Gaussian distribution with expected value $A\bmu + b$ and covariance $A\bSigma A^\top $. In other words, if $X \sim \mathcal{N}(\bmu, \bSigma)$ then $Y \sim \mathcal{N}(A\bmu+b, A\bSigma A^\top )$.
     \item The sum of two independent Gaussian random variables is also a Gaussian random variable. In particular, suppose $X_1$ and $X_2$ have multivariate Gaussian distributions with means $\bmu_1$ and $\bmu_2$ and covariances $\bSigma_1$ and $\bSigma_2$. Then the random variable $Y$ given by the sum:
     \begin{equation*}
         Y = X_1 + X_2,
@@ -41,7 +41,7 @@ These distributions exhibit several important properties which make them particu
 The Kalman filter is an extremely well known algorithm for state estimation that leverages the Gaussian distribution for efficiency. Unlike the discrete Bayes filter from the previous chapter, this filter can be applied to problems with \textit{continuous} states.
 In particular, a multivariate Gaussian distribution is used to parameterize the belief distribution over possible states, in other words the state $\x_t \sim \mathcal{N}(\bmu_t, \bSigma_t)$, and in long form this can be expressed as:
 \begin{equation*}
-bel(\x_t) = p(\x_t) = \frac{1}{\sqrt{\text{det}(2\pi \bSigma_t)}} \text{exp}\big( -\frac{1}{2}(\x_t-\bmu_t)^T \bSigma_t^{-1} (\x_t-\bmu_t) \big).
+bel(\x_t) = p(\x_t) = \frac{1}{\sqrt{\text{det}(2\pi \bSigma_t)}} \text{exp}\big( -\frac{1}{2}(\x_t-\bmu_t)^\top  \bSigma_t^{-1} (\x_t-\bmu_t) \big).
 \end{equation*}
 
 \subsubsection{Assumptions}
@@ -53,7 +53,7 @@ First, it is assumed that the initial belief $bel(\x_0)$ is Gaussian with $\x_0 
 where $\x_{t-1}$ is the previous state, $\bu_t$ is the most recent control input, and $\bm{\epsilon}_{t}$ is an independent \textit{process noise} that is normally distributed with $\bm{\epsilon}_t \sim \mathcal{N}(\bm{0},\bm{R}_t)$.
 Because of the properties of the Gaussian distribution presented earlier, this affine model preserves the Gaussian structure. In particular, the state transition model can be explicitly written as:
 \begin{equation*}
-p(\x_t \mid \x_{t-1}, \bu_t) = \frac{1}{\sqrt{\text{det}(2\pi \bm{R}_t)}} \text{exp}\big( -\frac{1}{2}(\x_t-A_t \x_{t-1} - B_t \bu_t)^T \bm{R}_t^{-1} (\x_t-A_t \x_{t-1} - B_t \bu_t) \big).
+p(\x_t \mid \x_{t-1}, \bu_t) = \frac{1}{\sqrt{\text{det}(2\pi \bm{R}_t)}} \text{exp}\big( -\frac{1}{2}(\x_t-A_t \x_{t-1} - B_t \bu_t)^\top  \bm{R}_t^{-1} (\x_t-A_t \x_{t-1} - B_t \bu_t) \big).
 \end{equation*}
 In other words, this can be expressed in shorthand as $\x_t \sim \mathcal{N}(A_t \x_{t-1} + B_t \bu_t, \bm{R}_t)$.
 
@@ -64,7 +64,7 @@ Second, the measurement model is also assumed to be linear, which again preserve
 where $\bm{\delta}_t$ is an independent measurement noise that is normally distributed with $\mathcal{N}(\bm{0},\bm{Q}_t)$.
 Again, this implies the measurement model can be expressed probabilistically as:
 \begin{equation*}
-p(\z_t \mid \x_t) = \frac{1}{\sqrt{\text{det}(2\pi \bm{Q}_t)}} \text{exp}\big( -\frac{1}{2}(\z_t-C_t\x_t)^T \bm{Q}_t^{-1} (\z_t-C_t\x_t) \big),
+p(\z_t \mid \x_t) = \frac{1}{\sqrt{\text{det}(2\pi \bm{Q}_t)}} \text{exp}\big( -\frac{1}{2}(\z_t-C_t\x_t)^\top  \bm{Q}_t^{-1} (\z_t-C_t\x_t) \big),
 \end{equation*}
 and in shorthand as $\z_t \sim \mathcal{N}(C_t \x_{t}, \bm{Q}_t)$.
 
@@ -102,7 +102,7 @@ While it is possible to derive the Kalman filter algorithm by evaluating the Bay
 where the $\bm{0}$ is the mean of the independent noise $\bm{\epsilon}_t \sim \mathcal{N}(\bm{0},\bm{R}_t)$. The covariance properties can similarly be used to give:
 \begin{equation*}
 \begin{split}
-\bar{\bSigma}_t &= A_t \bSigma_{t-1}A_t^T + \bm{R}_t. \\
+\bar{\bSigma}_t &= A_t \bSigma_{t-1}A_t^\top  + \bm{R}_t. \\
 \end{split}
 \end{equation*}
 
@@ -120,30 +120,30 @@ bel(x_t) = \eta\: \text{exp}\big(-\frac{1}2 J_t \big),
 \end{equation*}
 where $\eta$ is a normalization constant and:
 \begin{equation*}
-    J_t = (\z_t-C_t\x_t)^T \bm{Q}_t^{-1} (\z_t-C_t\x_t) + (\x_t-\bar{\bmu}_t)^T \bar{\bSigma}_t^{-1} (\x_t-\bar{\bmu}_t).
+    J_t = (\z_t-C_t\x_t)^\top  \bm{Q}_t^{-1} (\z_t-C_t\x_t) + (\x_t-\bar{\bmu}_t)^\top  \bar{\bSigma}_t^{-1} (\x_t-\bar{\bmu}_t).
 \end{equation*}
 To determine the mean $\bmu_t$ and covariance $\bSigma_t$ of this new Gaussian, one simple approach is just take the first and second derivative of $J_t$ with respect to $\x_t$. The mean is found where the first derivative is zero, and the covariance is the (inverse) of the constant second derivative:
 \begin{equation*}
 \begin{split}
-0 &= -C_t^T \bm{Q}_t^{-1}(\z_t - C_t \bmu_t) + \bar{\bSigma}_t^{-1}(\bmu_t - \bar{\bmu}_t), \\   
-\bSigma_t^{-1} &= C_t^T \bm{Q}_t^{-1} C_t + \bar{\bSigma}_t^{-1}.
+0 &= -C_t^\top  \bm{Q}_t^{-1}(\z_t - C_t \bmu_t) + \bar{\bSigma}_t^{-1}(\bmu_t - \bar{\bmu}_t), \\   
+\bSigma_t^{-1} &= C_t^\top  \bm{Q}_t^{-1} C_t + \bar{\bSigma}_t^{-1}.
 \end{split}
 \end{equation*}
 Through some algebraic manipulation the mean can be written in terms of the covariance $\bSigma_t$:
 \begin{equation*}
 \begin{split}
-\bmu_t &= \bar{\bmu}_t + \bSigma_t C_t^T \bm{Q}_t^{-1}(\z_t - C_t \bar{\bmu}_t), \\
+\bmu_t &= \bar{\bmu}_t + \bSigma_t C_t^\top  \bm{Q}_t^{-1}(\z_t - C_t \bar{\bmu}_t), \\
 \end{split}
 \end{equation*}
 and of course the covariance can be written as:
 \begin{equation*}
 \begin{split}
-\bSigma_t &= (C_t^T \bm{Q}_t^{-1} C_t + \bar{\bSigma}_t^{-1})^{-1}.
+\bSigma_t &= (C_t^\top  \bm{Q}_t^{-1} C_t + \bar{\bSigma}_t^{-1})^{-1}.
 \end{split}
 \end{equation*}
 While it is technically possible to stop here, this is not quite the form of the Kalman filter equations. In particular a few more algebraic steps are needed, based on the matrix inversion lemma result:
 \begin{equation*}
-(C_t^T \bm{Q}_t^{-1} C_t + \bar{\bSigma}_t^{-1})^{-1} = \bar{\bSigma}_t - \bar{\bSigma}_tC_t^T(C_t\bar{\bSigma}_tC_t^T + \bm{Q}_t)^{-1}C_t\bar{\bSigma}_t.
+(C_t^\top  \bm{Q}_t^{-1} C_t + \bar{\bSigma}_t^{-1})^{-1} = \bar{\bSigma}_t - \bar{\bSigma}_tC_t^\top (C_t\bar{\bSigma}_tC_t^\top  + \bm{Q}_t)^{-1}C_t\bar{\bSigma}_t.
 \end{equation*}
 By choosing to define the Kalman gain as $K_t = \bar{\bSigma}_{t}C_t^{T}(C_t\bar{\bSigma}_{t}C_t^{T}+\bm{Q}_t)^{-1}$ it can be seen that the covariance can be expressed as:
 \begin{equation*}
@@ -177,7 +177,7 @@ g(\bu_t, \x_{t-1}) &\approx g(\bu_t, \bmu_{t-1}) + G_t (\x_{t-1}-\bmu_{t-1}), \\
 \end{equation*}
 where $G_t = \nabla_{\x} g(\bu_t, \bmu_{t-1})$ is the Jacobian of $g$ evaluated at $\bmu_{t-1}$. From this linear approximation the state transition model can be expressed as:
 \begin{equation*}
-p(\x_t \mid \x_{t-1}, \bu_t) = \frac{1}{\sqrt{\text{det}(2\pi \bm{R}_t)}} \text{exp}\big( -\frac{1}{2}\Delta \x_t^T \bm{R}_t^{-1} \Delta \x_t \big),
+p(\x_t \mid \x_{t-1}, \bu_t) = \frac{1}{\sqrt{\text{det}(2\pi \bm{R}_t)}} \text{exp}\big( -\frac{1}{2}\Delta \x_t^\top  \bm{R}_t^{-1} \Delta \x_t \big),
 \end{equation*}
 where
 \begin{equation*}
@@ -200,7 +200,7 @@ h(\x_t) \approx h(\bar{\bmu}_t) + H_t (\x_{t}-\bar{\bmu}_{t}), \\
 \end{equation*}
 where $H_t = \nabla_{\x} h(\bar{\bmu}_{t})$ is the Jacobian of $h$ evaluated at $\bar{\bmu}_{t}$. The measurement model can then be expressed using this approximation as:
 \begin{equation*}
-p(\z_t \mid \x_t) = \frac{1}{\sqrt{\text{det}(2\pi \bm{Q}_t)}} \text{exp}\big( -\frac{1}{2}\Delta \z_t^T \bm{Q}_t^{-1} \Delta \z_t \big),
+p(\z_t \mid \x_t) = \frac{1}{\sqrt{\text{det}(2\pi \bm{Q}_t)}} \text{exp}\big( -\frac{1}{2}\Delta \z_t^\top  \bm{Q}_t^{-1} \Delta \z_t \big),
 \end{equation*}
 where $\Delta \z_t = \z_t-h(\bar{\bmu}_t) - H_t (\x_{t}-\bar{\bmu}_{t})$. From this result the measurement correction in the EKF can be shown to be similar to the Kalman filter, but where the Jacobians $H_t$ are used:
 \begin{equation*}

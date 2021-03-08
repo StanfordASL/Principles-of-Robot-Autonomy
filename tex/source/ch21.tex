@@ -1,25 +1,26 @@
-The previous chapter introduced the deterministic and stochastic sequential decision making problems, and demonstrated how these problems can be solved by dynamic programming. While dynamic programming is a powerful algorithm, it also suffers from several practical challenges. This chapter briefly introduces some of the key ideas in \textit{reinforcement learning}\cite{Bertsekas2019}\cite{SuttonBarto2018}, which encompasses a set of ideas that can generally be viewed as extensions or approximations of the dynamic programming approach, which make it more practical for many robotic applications.
+The previous chapter introduced the deterministic and stochastic sequential decision making problems, and demonstrated how these problems can be solved by dynamic programming. 
+While dynamic programming is a powerful algorithm, it also suffers from several practical challenges. This chapter briefly introduces some of the key ideas in \textit{reinforcement learning}\cite{Bertsekas2019}\cite{SuttonBarto2018}, which encompasses a set of ideas that can generally be viewed as extensions or approximations of the dynamic programming approach, which make it more practical for many robotic applications.
 
 \notessection{Reinforcement Learning}
-Reinforcement learning (RL) is a broad field that studies autonomous decision making, including several more general and challenging problems than have been considered in previous chapters. In particular, the standard reinforcement learning problem is to determine closed-loop control policies that drive an agent to maximize an accumulated reward\footnote{Note that the maximization of ``reward'' in the context of reinforcement learning is essentially equivalent to minimization of ``cost'' in optimal control formulations}. However, in the most general case it is not required that a \textit{system model} be known! This paradigm can be represented by Figure \ref{fig:rl}, where it can be seen that given a control input the environment specifies the state and reward, and the environment can be considered to be a black box (it is not necessarily known how the state is generated).
+Reinforcement learning (RL) is a broad field that studies autonomous decision making, including several more general and challenging problems than have been considered in previous chapters. 
+In particular, the standard reinforcement learning problem is to determine closed-loop control policies that drive an agent to maximize an accumulated reward\footnote{Note that the maximization of ``reward'' in the context of reinforcement learning is essentially equivalent to minimization of ``cost'' in optimal control formulations}. However, in the most general case it is not required that a \textit{system model} be known! This paradigm can be represented by Figure \ref{fig:rl}, where it can be seen that given a control input the environment specifies the state and reward, and the environment can be considered to be a black box (it is not necessarily known how the state is generated).
 \begin{figure}[ht]
     \centering
-    \includegraphics[width=0.6\textwidth]{tex/figs/ch23_figs/rl.png}
+    \includegraphics[width=0.6\textwidth]{tex/figs/ch21_figs/rl.png}
     \caption{In reinforcement learning problems, the robot (agent) learns how to make decisions by interacting with the environment.}
     \label{fig:rl}
 \end{figure}
 
-
 Reinforcement learning is a highly active field of research, and has seen successes in several applications including acrobatic control of helicopters, games, finance, and robotics. In this chapter the fundamentals of reinforcement learning are introduced, including the formulation of the RL problem, RL algorithms that leverage system models (value iteration/dynamic programming and policy iteration), and a few RL algorithms that do not require system models (Q-learning, policy gradient, actor-critic). 
 
 \subsection{Problem Formulation}
-The reinforcement learning problem is effectively the same as the stochastic decision making problem from the previous chapter, but a slightly different notation will be used\footnote{The fields of optimal control and reinforcement learning have significant overlap, but each community has developed its own standard notation. Most often, the state in the optimal control community is represented by $\x$ and in the RL community as $\bm{s}$. Similarly, in control theory the control input is $\bu$ while in the RL community it is referred to as an action $\bm{a}$.}. The state and control input for the system is denoted as $\x$ and $\bu$ (as in previous chapters), and the set of admissible states and controls are denoted as $\mathcal{X}$ and $\mathcal{U}$. However, the stochastic state transition model will now be written as:
+The reinforcement learning problem is effectively the same as the stochastic decision making problem from the previous chapter, but a slightly different notation will be used\footnote{The fields of optimal control and reinforcement learning have significant overlap, but each community has developed its own standard notation. Most often, the state in the optimal control community is represented by $\x$ and in the RL community as $\bm{s}$. Similarly, in control theory the control input is $\bu$ while in the RL community it is referred to as an action $\bm{a}$.}. The state and control input for the system is denoted as $\x$ and $\bu$, and the set of admissible states and controls are denoted as $\mathcal{X}$ and $\mathcal{U}$. However, the stochastic state transition model will now be written as:
 \begin{equation} \label{eq:RLmodel}
 p(\x_t \mid \x_{t-1}, \bu_{t-1}),
 \end{equation}
 which is the conditional probability distribution over $\x_t$, given the previous state and control. 
 
-As was the case for the stochastic decision making problem from last chapter, RL algorithms seek to compute \textit{policies} $\pi = \{\pi_0, \pi_1, \dots, \pi_{T-1}\}$ that define the control:
+As was the case for the stochastic decision making problem from previous chapter, RL algorithms seek to compute \textit{policies} $\pi = \{\pi_0, \pi_1, \dots, \pi_{T-1}\}$ that define the control:
 \begin{equation} \label{eq:RLpolicy}
 \bu_t = \pi_t(\x_t),
 \end{equation}
@@ -48,7 +49,7 @@ for all states $\x \in \mathcal{X}$.
 Model-based reinforcement learning methods rely on the use of an explicit parameterization of the transition model \eqref{eq:RLmodel}. While this model could come from physics-based modeling techniques, in many RL settings the model might also be learned from data! For example, for discrete state/action spaces it is possible to empirically approximate the transition probabilities $p(\x_t \mid \x_{t-1}, \bu_{t-1})$ for every pair $(\x_t,\bu_t)$ by counting the number of times each transition occurs in the dataset! More sophisticated models include linear models generated through least squares, or Gaussian process or neural network models trained through an appropriate loss function.
 
 \subsubsection{Value Iteration (Dynamic Programming)}
-While the dynamic programming algorithm was covered in the last chapter, it will also be included here in the context of the reinforcement learning problem formulation. In this case, the ``principle of optimality'' again says that the optimal \textit{tail} policy is optimal for \textit{tail} subproblems, which leads to the recursion:
+While the dynamic programming algorithm was covered in the previous chapter, it will also be included here in the context of the reinforcement learning problem formulation. In this case, the ``principle of optimality'' again says that the optimal \textit{tail} policy is optimal for \textit{tail} subproblems, which leads to the recursion:
 \begin{equation} \label{eq:RLbellman}
 V^*_{k+1}(\x) = \underset{\bu \in \mathcal{U}}{\max} \:\:R(\x, \bu) + \gamma \sum_{\x'} p(\x' \mid \x, \bu) V^*_{k}(\x'),
 \end{equation}
@@ -255,12 +256,55 @@ Q-learning can be guaranteed to converge to the optimal Q-function under certain
 \subsubsection{Policy Gradient}
 The \textit{policy gradient} method for reinforcement learning problems can also be applied to situations where the model is unknown. This approach, which directly optimizes the policy, can be particularly useful for scenarios where the optimal policy may be relatively simple compared to the Q-function, in which case Q-learning may be challenging. 
 
-In the policy gradient approach, a class of candidate policies $\pi_{\btheta}$ is defined based on a set of parameters $\btheta$, and the goal is to \textit{directly} modify the parameters $\btheta$ to improve performance. This is accomplished by using trajectory data to estimate a gradient of the performance with respect to the policy parameters $\btheta$, and then using the gradient to update $\btheta$. Because this method works directly on a policy (and does not learn a model or value function), it is referred to as a \textit{model-free} \textit{policy-based} approach.
+In the policy gradient approach, a class of \textit{stochastic}\footnote{A stochastic policy defines a distribution over actions at a given state, is useful for exploration, and sometimes is even required for optimality.} candidate policies $\pi_{\btheta}(\bu_t \mid \x_t)$ is defined based on a set of parameters $\btheta$, and the goal is to \textit{directly} modify the parameters $\btheta$ to improve performance. This is accomplished by using trajectory data to estimate a gradient of the performance with respect to the policy parameters $\btheta$, and then using the gradient to update $\btheta$. Because this method works directly on a policy (and does not learn a model or value function), it is referred to as a \textit{model-free} \textit{policy-based} approach.
 
-In general, policy-based RL methods such as policy gradient can converge more easily than value-based methods, can be effective in high-dimensional or continuous action spaces, can learn stochastic policies. However, one challenge with directly learning policies is that it is easy to converge to local optima, and it requires data from the \textit{current} policy to compute the gradients (in contrast to Q-learning which is agnostic to the policy used), which makes it data-inefficient.
+Considering the original problem \eqref{eq:rlproblem}, the objective function can be written as:
+\begin{equation*}
+    J(\btheta) = E\big[\sum_{t=0}^{T-1} \gamma^tR(\x_t, \pi_{\btheta}(\bu_t \mid \x_t))\big],
+\end{equation*}
+where the $J(\btheta)$ notation is used to explicitly show the dependence on the parameters. Implementing a policy gradient approach therefore requires the computation of $\nabla_{\btheta} J(\btheta)$. One of the most common approaches is to \textit{estimate} this quantity using data, using what is known as a \textit{likelihood ratio method}.
+
+Let $\tau$ represent a \textit{trajectory} of the system (consisting of sequential states and actions) under the current policy $\pi_{\btheta}(\bu_t \mid \x_t)$. As a shorthand notation, consider the total discounted reward over a trajectory $\tau$ to be defined written as:
+\begin{equation} \label{eq:trajreward}
+    r(\tau) = \sum_{t=0}^{T-1} \gamma^tR(\x_t, \pi_{\btheta}(\bu_t \mid \x_t),
+\end{equation}
+such that $J(\btheta)$ can be expressed equivalently as $J(\btheta) = E\big[r(\tau)\big]$. Additionally, let the probability that the trajectory $\tau$ occurs be expressed by the distribution $p_{\btheta}(\tau)$. Then the expectation from the objective function can be expanded as:
+\begin{equation*}
+J(\btheta) = \int_\tau r(\tau)p_{\btheta}(\tau) d\tau,
+\end{equation*}
+and its gradient given by\marginnote{From standard calculus $\nabla_{\btheta} \log p_{\btheta}(\tau) = \frac{1}{p_{\btheta}(\tau)} \nabla_{\btheta} p_{\btheta}(\tau)$, which replaces the use of the gradient $\nabla_{\btheta} p_{\btheta}(\tau)$ with $\nabla_{\btheta} \log p_{\btheta}(\tau)$. This is a very useful ``trick'' when it comes to approximately computing the integral, as will be seen shortly.}:
+\begin{equation*}
+\nabla_{\btheta} J(\btheta) = \int_\tau r(\tau)p_{\btheta}(\tau) \nabla_{\btheta} \log p_{\btheta}(\tau) d\tau.
+\end{equation*}
+Rather than explicitly computing this integral it is much easier to approximate using sampled data (i.e. sampled trajectories). This is possible since the integral can be written as the expectation $\nabla_{\btheta} J(\btheta) = E\big[r(\tau)\nabla_{\btheta} \log p_{\btheta}(\tau)\big]$, which can be estimated using a Monte Carlo method. While in general a number of sampled trajectories could be used to estimate the gradient, for data efficiency it is also possible to just use a single sampled trajectory $\tau$ and approximate:
+\begin{equation} \label{eq:policygradapprox}
+\nabla_{\btheta} J(\btheta) \approx r(\tau) \nabla_{\btheta} \log p_{\btheta}(\tau).
+\end{equation}
+In particular the sampled quantities $r(\tau)$ can be directly computed from \eqref{eq:trajreward}, and it turns out that the term $\nabla_{\btheta} \log p_{\btheta}(\tau)$ can be evaluated quite easily as\footnote{Using Bayes' rule: $p_{\btheta}(\tau) = p(\x_0) \Pi_{t=1}^{T-1} p(\x_t \mid \x_{t-1}, \bu_{t-1})\pi_{\btheta}(\x_{t-1} \mid \bu_{t-1})$. Then the $\log$ converts the product into a sum.}:
+\begin{equation} \label{eq:gradlogterm}
+\nabla_{\btheta} \log p_{\btheta}(\tau) = \sum_{t=0}^{T-1} \nabla_{\btheta} \log \pi_{\btheta}(\bu_t \mid \x_t).
+\end{equation}
+Importantly, notice that only the gradient of the policy is needed, and knowledge of the transition model $p(\x_t \mid \x_{t-1}, \bu_{t-1})$ is not! This occurs because only the policy is dependent on the parameters $\btheta$.
+
+In summary, the gradient of $J(\theta)$ can be approximated given a trajectories $\tau$ under the current policy $\pi_{\btheta}$ by:
+\begin{enumerate}
+\item Compute $r(\tau)$ for the sampled trajectory using \eqref{eq:trajreward}.
+\item Compute $\nabla_{\btheta} \log p_{\btheta}(\tau)$ for the sampled trajectory using \eqref{eq:gradlogterm}, which only requires computing gradients related to the current policy $\pi_{\btheta}$.
+\item Approximate $\nabla_{\btheta} J(\btheta)$ using \eqref{eq:policygradapprox}.
+\end{enumerate}
+The process of sampling trajectories from the current policy, approximating the gradient, and performing a gradient descent step on the parameters $\btheta$ is referred to as the \textit{REINFORCE} algorithm\footnote{There are some other modified versions of this algorithm, for example some contain a baseline term $b(\x_0)$ in the gradient by replacing $r(\tau)$ with $r(\tau) - b(\x_0)$ to reduce the variance of the Monte Carlo estimate.}.
+
+In general, policy-based RL methods such as policy gradient can converge more easily than value-based methods, can be effective in high-dimensional or continuous action spaces, and can learn stochastic policies. However, one challenge with directly learning policies is that they can get trapped in undesirable local optima. Policy gradient methods can also be data inefficient since they require data from the \textit{current} policy for each gradient step and cannot easily reuse old data.
+This is in contrast to Q-learning, which is agnostic to the policy used and therefore doesn't waste data collected from past interactions.
 
 \subsubsection{Actor-Critic}
-Another popular reinforcement learning algorithm is the \textit{actor-critic} algorithm, which blends the concepts of value-based and policy-based model-free RL. In particular, a parameterized policy $\pi_{\btheta}$ (actor) is learned  along side an estimated Q-function for the policy (critic). The addition of the critic helps to reduce the variance in the gradient estimates for the actor policy, which makes the overall learning process more data-efficient.
+Another popular reinforcement learning algorithm is the \textit{actor-critic} algorithm, which blends the concepts of value-based and policy-based model-free RL. In particular, a parameterized policy $\pi_{\btheta}$ (actor) is learned through a policy gradient method along side an estimated value function for the policy (critic). The addition of the critic helps to reduce the variance in the gradient estimates for the actor policy, which makes the overall learning process more data-efficient\footnote{This is a similar variance reduction approach to adding a baseline $b(\x_\tau)$ to the REINFORCE. In fact the baseline is chosen as the value function!}.
+
+In particular, the policy $\pi_{\btheta}$ is again learned through policy gradient like in the REINFORCE algorithm, but with the addition of a learned approximation of the value function $V_{\bphi}(\x)$ as a baseline:
+\begin{equation*}
+\nabla_{\btheta} J(\btheta) \approx \sum_{t=0}^{T-1}  \big(r(\tau) - V_{\bphi}(\x_0)\big) \nabla_{\btheta} \log \pi_{\btheta}(\bu_t \mid \x_t).
+\end{equation*}
+Recall that the value function $V(\x)$ quantifies the expected total return starting from state $\x$ (i.e. the average performance). Therefore the quantity $r(\tau) - V_{\bphi}(\x_0)$ now represents a performance increase over average. Of course in this method the learned value function approximation $V_{\bphi}(\x)$ is also updated along with the policy by performing a similar gradient descent on the parameters $\bphi$.
 
 \subsection{Deep Reinforcement Learning}
 Neural networks are a powerful function approximator that can be utilized in reinforcement learning algorithms. For example, in Q-learning the Q-function can be approximated by a neural network to extend the approach to nonlinear, continuous state space domains. In policy gradient methods, the policy $\pi_{\btheta}$ can be parameterized as a neural network, enabling the policy to operate on high-dimensional states including images (i.e. visual feedback)!
@@ -268,4 +312,4 @@ Neural networks are a powerful function approximator that can be utilized in rei
 \subsection{Exploration vs Exploitation}
 When learning from experience (e.g. using Q-learning, policy gradient, actor-critic, deep RL, etc.) it is important to ensure that the experienced trajectories (i.e. the collected data points) are meaningful! For example, an abundance of data related to a particular set of actions/states will not necessarily be sufficient to learn good policies for \textit{all} possible situations. Therefore an important part of reinforcement learning is \textit{exploring} different combinations of states and actions. One simple approach to exploration is referred to as $\epsilon$-greedy exploration, where a random control is applied instead of the current (best) policy with probability $\epsilon$. 
 
-However, exploration can lead to suboptimal performance since any knowledge accumulated about the optimal policy is ignored. This leads to the \textit{exploration vs exploitation} trade-off: a fundamental challenge in reinforcement learning.
+However, exploration can lead to suboptimal performance since any knowledge accumulated about the optimal policy is ignored\footnote{In other words, actions with known rewards may be foregone in the hope that exploring leads to an even better reward.}. This leads to the \textit{exploration vs exploitation} trade-off: a fundamental challenge in reinforcement learning.

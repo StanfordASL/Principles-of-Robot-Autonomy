@@ -46,7 +46,7 @@ A robot's motion through time (i.e. its trajectory) is then expressed by the fun
 \begin{equation*}
     \bxi(t): \R \to \R^n,
 \end{equation*}
-where $t$ denotes time. In the case of the wheel in Figure \ref{fig:non slip disk} the generalized coordinate vector would be $\bxi = \begin{bmatrix} x & y & \theta \end{bmatrix}^T$.
+where $t$ denotes time. In the case of the wheel in Figure \ref{fig:non slip disk} the generalized coordinate vector would be $\bxi = \begin{bmatrix} x & y & \theta \end{bmatrix}^\top $.
 
 \begin{figure*}[ht] 
     \centering 
@@ -59,7 +59,7 @@ where $t$ denotes time. In the case of the wheel in Figure \ref{fig:non slip dis
 Once a set of generalized coordinates $\bxi$ has been identified, they can be used to mathematically define kinematic constraints that define a robot's motion. A more formal definition of general kinematic constraints is first presented:
 
 \begin{definition}[Kinematic Constraints]
-Let the generalized coordinates of a robot be denoted as $\bxi =[\xi_1, \dots, \xi_n]^T $. Constraints that depend on these generalized coordinates and their velocities are called kinematic constraints and are expressed as
+Let the generalized coordinates of a robot be denoted as $\bxi =[\xi_1, \dots, \xi_n]^\top  $. Constraints that depend on these generalized coordinates and their velocities are called kinematic constraints and are expressed as
 \begin{equation} \label{eq:kinconst}
     a_i(\bxi, \dot{\bxi}) = 0, \quad \quad i = 1, \dots, k < n
 \end{equation}
@@ -68,18 +68,18 @@ where $\dot{\bxi} = \frac{d\bxi}{dt}$ are the velocities.
 
 Kinematic constraints in robotics applications are often linear with respect to the generalized velocities. Constraints of this kind are referred to as \textit{Pfaffian constraints} and are expressed as
 \begin{equation} \label{eq:pfaffian}
-    a_i^T(\bxi)\dot{\bxi} = 0, \quad \quad i =1, \dots, k < n
+    a_i^\top (\bxi)\dot{\bxi} = 0, \quad \quad i =1, \dots, k < n
 \end{equation}
 where $a_i(\bxi) \in \R^n$. For notational simplicity these constraints can be compactly expressed in matrix form as
 \begin{equation}
-    A^T(\bxi)\dot{\bxi}=\bm{0},
+    A^\top (\bxi)\dot{\bxi}=\bm{0},
 \end{equation}
 where $A(\bxi) \in \R^{n \times k}$.
 
 
 \begin{example}[Pendulum] \label{ex:pendulum}
 \theoremstyle{definition}
-Figure \ref{fig:pendulum} shows a simple pendulum that is assumed to rotate about a fixed pivot point. Let the position of the mass be given by the Cartesian coordinates $(x,y)$, which can be used as the generalized coordinates for this system (i.e. $\bxi = [x, y]^T$). Since the rod connecting the pivot point to the mass is assumed to be rigid this implies a kinematic constraint. Assuming the pivot point is at the origin $(0,0)$ this constraint can be expressed as
+Figure \ref{fig:pendulum} shows a simple pendulum that is assumed to rotate about a fixed pivot point. Let the position of the mass be given by the Cartesian coordinates $(x,y)$, which can be used as the generalized coordinates for this system (i.e. $\bxi = [x, y]^\top $). Since the rod connecting the pivot point to the mass is assumed to be rigid this implies a kinematic constraint. Assuming the pivot point is at the origin $(0,0)$ this constraint can be expressed as
 \begin{equation} \label{eq:pendholonomic}
 a_1(\bxi) = x^2 + y^2 - L^2 = 0,    
 \end{equation}
@@ -102,9 +102,9 @@ In this particular case a more natural choice of coordinates would simply be $\b
 
 \begin{example}[No-Slip Wheel] \label{ex:noslipwheel}
 \theoremstyle{definition}
-Consider again the wheel illustrated in Figure \ref{fig:non slip disk} with generalized coordinates $\bxi = [x, y, \theta]^T$, and assume that there is a no-slip condition between the wheel and the plane it rolls on. This no-slip condition means that the velocity component of the wheel in the lateral direction is always zero. Since the heading of the wheel is given by the unit vector $e_v = [\cos\theta, \:\sin\theta]^T$, the lateral direction can be described by the perpendicular unit vector $e_{v,\perp} = [\sin\theta, \: -\cos\theta]^T$. 
+Consider again the wheel illustrated in Figure \ref{fig:non slip disk} with generalized coordinates $\bxi = [x, y, \theta]^\top $, and assume that there is a no-slip condition between the wheel and the plane it rolls on. This no-slip condition means that the velocity component of the wheel in the lateral direction is always zero. Since the heading of the wheel is given by the unit vector $e_v = [\cos\theta, \:\sin\theta]^\top $, the lateral direction can be described by the perpendicular unit vector $e_{v,\perp} = [\sin\theta, \: -\cos\theta]^\top $. 
 
-Since the velocity vector is $v = [\dot{x}, \: \dot{y}]^T$, the no-slip kinematic constraint can be expressed by the inner product $v \cdot e_{v,\perp} = 0$, which is equivalently expressed as
+Since the velocity vector is $v = [\dot{x}, \: \dot{y}]^\top $, the no-slip kinematic constraint can be expressed by the inner product $v \cdot e_{v,\perp} = 0$, which is equivalently expressed as
 \begin{equation} \label{eq:wheelnonholonomic}
 a_1(\bxi,\dot{\bxi}) = \dot{x} \sin\theta - \dot{y} \cos \theta = 0.
 \end{equation}
@@ -130,7 +130,7 @@ are called holonomic.
 Additionally, a \textit{holonomic system} is a system that is only subject to holonomic constraints.
 Note that these constraints can \textit{always} be equivalently expressed as Pfaffian constraints of the form \eqref{eq:pfaffian} by differentiating the expression
 \begin{equation}
-\frac{dh_i(\bxi)}{dt} = \frac{dh_i(\bxi)}{d\bxi}\dot{\bxi} = a_i^T(\bxi) \dot{\bxi} = 0. \quad i = 1, \dots, k < n
+\frac{dh_i(\bxi)}{dt} = \frac{dh_i(\bxi)}{d\bxi}\dot{\bxi} = a_i^\top (\bxi) \dot{\bxi} = 0. \quad i = 1, \dots, k < n
 \end{equation}
 However, it is important to note that not all Pfaffian constraints are holonomic. A Pfaffian constraint is only holonomic if it is \textit{integrable} to the form \eqref{eq:holonomic}.
 
@@ -142,16 +142,6 @@ Consider again the pendulum from Example \ref{ex:pendulum}, where the kinematic 
 Alternatively, consider the wheel from Example \ref{ex:noslipwheel}, where the kinematic constraint \eqref{eq:wheelnonholonomic} \textit{cannot} be integrated to yield a constraint of the form $h_i(\bxi) = 0$. In contrast to the pendulum, this system has no restriction on what configuration it can be in as it can potentially move to any point $(x,y)$.
 
 
-% %-------------- figure 2
-
-% \begin{figure}[t] 
-%     \centering 
-%     \includegraphics[width=0.4\linewidth]{tex/figs/ch01_figs/twoarm.png}
-%     \caption{A robot which consists of two rigid body links connected by a joint. Link 1 can be fully described by $x_1,y_1, \theta_1$, and link 2, by $ x_2,y_2, \theta_2$. Since the mechanical joint connects the two rigid bodies together, we obtain two holonomic constraints, $x_1 = x_2; y_1 = y_2$. 
-%     Therefore, even though link 1 and link 2 have 3 degrees of freedom (DOF) individually, we only need 4 configuration variables (6 DOF ($n$)$-$2 constraints ($k$)) to fully describe kinematics of the robot. This seems natural: the pose of link 1, and the orientation of link 2 are enough to fully describe the robot's pose. }
-%     \label{two piece robot} 
-% \end{figure} 
-
 \subsubsection{Nonholonomic Constraints}
 While holonomic constraints are kinematic constraints which restrict the accessible configurations of the system, not all kinematic constraints are holonomic. In particular, it is possible to have kinematic constraints that \textit{do not} restrict accessible configurations, but rather restrict the motion \textit{between} configurations. These constraints are referred to as \textit{nonholonomic} constraints.
 
@@ -159,30 +149,30 @@ While holonomic constraints are kinematic constraints which restrict the accessi
 Constraints that can be described in Pfaffian form, but cannot be integrated to $h_i(\bxi) = 0 $ form are called nonholonomic.
 \end{definition}
 Additionally, a \textit{nonholonomic system} is a system that is subject to at least one nonholonomic constraint.
-The restriction of instantaneous motion that is induced by a nonholonomic constraint can be interpreted by considering the Pfaffian form $a_i(\bxi)^T\dot{\bxi} = 0$. It is clear that for any coordinate $\bxi$, this constraint limits the motion ($\dot{\bxi}$) to lie in the null space of $a_i(\bxi)^T$.
+The restriction of instantaneous motion that is induced by a nonholonomic constraint can be interpreted by considering the Pfaffian form $a_i(\bxi)^\top \dot{\bxi} = 0$. It is clear that for any coordinate $\bxi$, this constraint limits the motion ($\dot{\bxi}$) to lie in the null space of $a_i(\bxi)^\top $.
 
 \paragraph{Examples:}
 Consider again the wheel example from Example \ref{ex:noslipwheel} which has a nonholonomic constraint
 \begin{equation*}
-a_i(\bxi)^T\dot{\bxi} = \begin{bmatrix}
+a_i(\bxi)^\top \dot{\bxi} = \begin{bmatrix}
 \sin \theta & -\cos \theta & 0
 \end{bmatrix}\dot{\bxi}=0.
 \end{equation*}
-The null space of $a_i(\bxi)^T$ in this case is spanned by the vectors $[\cos \theta, \: \sin \theta,\: 0]$ and $[0, \: 0,\: 1]$ which suggests that any potential motion must be made up of a linear combination of these vectors. Intuitively this would be expected because $[\cos \theta, \: \sin \theta,\: 0]$ is the unit vector in the direction of rolling, and $0, : 0,\: 1]$ would correspond to the wheel spinning but not rolling. 
+The null space of $a_i(\bxi)^\top $ in this case is spanned by the vectors $[\cos \theta, \: \sin \theta,\: 0]$ and $[0, \: 0,\: 1]$ which suggests that any potential motion must be made up of a linear combination of these vectors. Intuitively this would be expected because $[\cos \theta, \: \sin \theta,\: 0]$ is the unit vector in the direction of rolling, and $0, : 0,\: 1]$ would correspond to the wheel spinning but not rolling. 
 
 \subsection{Kinematic Models}
 Once an appropriate set of generalized coordinates $\bxi \in \R^n$ and all relevant kinematic constraints have been identified for a particular robot the next step is to develop a kinematic model.
 In particular these kinematic models will consist of a set of differential equations of the form $\dot{\bxi}(t) = G(\bxi(t))\bu(t)$, where $\bu(t)$ is referred to as a system input or \textit{control}. Given a particular input $\bu(t)$ and an initial condition $\bxi(0)$ this model will define a trajectory of the system.
 
 \begin{definition} [Kinematic Model]
-Given a generalized coordinate vector $\bxi \in \R^n$ and $k$ Pfaffian kinematic constraints $A^T(\bxi)\dot{\bxi}=\bm{0}$, a kinematic model can be defined as $\dot{\bxi} = G(\bxi)u$ where the column space of $G(\bxi) \in \R^{n \times n-k}$ spans the null space of $A^T(\bxi)$. Additionally, for any input $u$ the solutions to the kinematic model are guaranteed to satisfy the Pfaffian constraints.
+Given a generalized coordinate vector $\bxi \in \R^n$ and $k$ Pfaffian kinematic constraints $A^\top (\bxi)\dot{\bxi}=\bm{0}$, a kinematic model can be defined as $\dot{\bxi} = G(\bxi)u$ where the column space of $G(\bxi) \in \R^{n \times n-k}$ spans the null space of $A^\top (\bxi)$. Additionally, for any input $u$ the solutions to the kinematic model are guaranteed to satisfy the Pfaffian constraints.
 \end{definition}
 
-Consider $k$ Pfaffian constraints written in matrix form as $A^T(\bxi)\dot{\bxi}=\bm{0}$ (which can be a combination of holonomic and nonholonomic constraints). As was noted earlier these constraints imply that a generalized velocity $\dot{\bxi}$ is only admissible at a configuration $\bxi$ if it lies in the $n-k$ dimensional null space of the matrix $A^T(\bxi)$. A new matrix, $G(\bxi) \in \R^{n \times n-k}$ can therefore be defined such that the columns of $G(\bxi)$ span the null space of $A^T(\bxi)$. In other words, for each column $g_i$ of $G$ it holds that $A^T(\bxi)g_i = 0$. To ensure that the generalized velocity $\dot{\bxi}$ satisfies the kinematics constraints it is therefore sufficient to require that $\dot{\bxi} = G(\bxi) u$ where $\bu \in \R^{n-k}$ can be \textit{any} vector. To explicitly show why this is true, consider any vector $u$ and write $\dot{\bxi} = G(\bxi)\bu = \sum_{i=1}^{n-k} g_i(\bxi) u_i$. When this is substituted into the Pfaffian constraints the expression becomes
+Consider $k$ Pfaffian constraints written in matrix form as $A^\top (\bxi)\dot{\bxi}=\bm{0}$ (which can be a combination of holonomic and nonholonomic constraints). As was noted earlier these constraints imply that a generalized velocity $\dot{\bxi}$ is only admissible at a configuration $\bxi$ if it lies in the $n-k$ dimensional null space of the matrix $A^\top (\bxi)$. A new matrix, $G(\bxi) \in \R^{n \times n-k}$ can therefore be defined such that the columns of $G(\bxi)$ span the null space of $A^\top (\bxi)$. In other words, for each column $g_i$ of $G$ it holds that $A^\top (\bxi)g_i = 0$. To ensure that the generalized velocity $\dot{\bxi}$ satisfies the kinematics constraints it is therefore sufficient to require that $\dot{\bxi} = G(\bxi) u$ where $\bu \in \R^{n-k}$ can be \textit{any} vector. To explicitly show why this is true, consider any vector $u$ and write $\dot{\bxi} = G(\bxi)\bu = \sum_{i=1}^{n-k} g_i(\bxi) u_i$. When this is substituted into the Pfaffian constraints the expression becomes
 \begin{equation*}
 \begin{split}
-A^T(\bxi)\dot{\bxi} &= A^T(\bxi)\big(\sum_{i=1}^{n-k} g_i(\bxi) u_i\big), \\
-&= \sum_{i=1}^{n-k} A^T(\bxi) g_i(\bxi) u_i, \\
+A^\top (\bxi)\dot{\bxi} &= A^\top (\bxi)\big(\sum_{i=1}^{n-k} g_i(\bxi) u_i\big), \\
+&= \sum_{i=1}^{n-k} A^\top (\bxi) g_i(\bxi) u_i, \\
 &= 0, \\
 \end{split}
 \end{equation*}
@@ -190,11 +180,11 @@ which shows that the kinematic constraints are satisfied.
 
 \paragraph{Examples:} Consider again the wheel example from Example \ref{ex:noslipwheel} which has a single nonholonomic constraint
 \begin{equation*}
-a_i(\bxi)^T\dot{\bxi} = \begin{bmatrix}
+a_i(\bxi)^\top \dot{\bxi} = \begin{bmatrix}
 \sin \theta & -\cos \theta & 0
 \end{bmatrix}\dot{\bxi}=0,
 \end{equation*}
-where $\bxi = [x,\:y, \:\theta]^T$. The null space of $a_i(\bxi)^T$ in this case is spanned by the vectors $[\cos \theta, \: \sin \theta,\: 0]$ and $[0, \: 0,\: 1]$ and therefore the kinematic model is given by
+where $\bxi = [x,\:y, \:\theta]^\top $. The null space of $a_i(\bxi)^\top $ in this case is spanned by the vectors $[\cos \theta, \: \sin \theta,\: 0]$ and $[0, \: 0,\: 1]$ and therefore the kinematic model is given by
 \begin{equation} \label{eq:wheelkinmodel}
 \begin{bmatrix}
 \dot{x} \\ \dot{y} \\ \dot{\theta}
@@ -230,16 +220,16 @@ The advantage of the unicycle model lies in its simplicity and its ability to ca
 \begin{marginfigure}
     \centering 
     \includegraphics[width=0.8\linewidth]{tex/figs/ch01_figs/unicycle.png}
-    \caption{Generalized coordinates for a unicycle.} 
+    \caption{Generalized coordinates for a unicycle.}
     \label{fig:uni} 
 \end{marginfigure} 
 
 
 \subsubsection{Differential Drive Model}
 The differential drive model is a slight variation on the unicycle model (see Section \ref{subsubsec:uni}) that does not lump all of the wheels together. Instead, this model assumes two wheels are fixed on a rear shared axle, with a passive wheel that induces no kinematic constraints in the front.
-As shown in Figure \ref{fig:dd} this model has the same generalized coordinates as the unicycle model ($\bxi = [x,\:y,\:\theta]^T$) but also includes some geometry of the robot by assuming the width of the rear axle is denoted by $L$.
+As shown in Figure \ref{fig:dd} this model has the same generalized coordinates as the unicycle model ($\bxi = [x,\:y,\:\theta]^\top $) but also includes some geometry of the robot by assuming the width of the rear axle is denoted by $L$.
 
-Same as for the unicycle model, this model assumes the wheels roll without slipping. The derivation of the kinematic constraints is therefore similar to Example \ref{ex:noslipwheel}. In particular, the heading of each wheel is always given by $e_v = [\cos \theta, \: \sin \theta]^T$, the lateral direction is given by $e_{v,\perp} = [\sin \theta, \: -\cos \theta]^T$, and thus the two no-slip kinematic constraints can be expressed as
+Same as for the unicycle model, this model assumes the wheels roll without slipping. The derivation of the kinematic constraints is therefore similar to Example \ref{ex:noslipwheel}. In particular, the heading of each wheel is always given by $e_v = [\cos \theta, \: \sin \theta]^\top $, the lateral direction is given by $e_{v,\perp} = [\sin \theta, \: -\cos \theta]^\top $, and thus the two no-slip kinematic constraints can be expressed as
 \begin{equation*}
 \dot{p}_l \cdot e_{v,\perp} = 0, \quad \dot{p}_r \cdot e_{v,\perp} = 0,
 \end{equation*}

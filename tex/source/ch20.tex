@@ -1,4 +1,5 @@
-The previous chapter on finite state machines provided an introduction into high-level robot behavior specification. Another important topic along this thread is \textit{sequential decision making}\cite{Bertsekas2019}, where the robot must make a series of decisions to accomplish an objective in an optimal way. This chapter provides an introduction to fundamental topics in decision making, including for problems where there is some uncertainty (e.g. uncertainty about the robot's state or about the environment).
+The previous chapter on finite state machines provided an introduction into high-level robot behavior specification. Another important topic along this thread is \textit{sequential decision making}\cite{Bertsekas2019}, where the robot must make a series of decisions to accomplish an objective in an optimal way. 
+This chapter provides an introduction to fundamental topics in decision making, including for problems where there is some uncertainty (e.g. uncertainty about the robot's state or about the environment).
 
 \notessection{Sequential Decision Making}
 In addition to the motion planning and control problems discussed in earlier chapters (which focus on low-level tasks), there exist a broad range of situations where higher-level autonomous decision making is required. For example when deciding whether it is time for a self-driving car to cross an intersection, or whether a robot should first complete task A or task B.
@@ -30,18 +31,19 @@ where $g_N$ is a terminal state cost function and $g_k$ for $k=0,\dots,N-1$ are 
 \begin{definition}[Deterministic Decision Making Problem]
 The deterministic decision making problem can be expressed for the system model \eqref{eq:detmodel}, control constraints \eqref{eq:SDMPconstraints}, and cost function \eqref{eq:detcost} as:
 \begin{equation} \label{eq:dproblem}
-J^*(\x_0) = \underset{\bu_k \in \mathcal{U}(\x_k), k=0,\dots,N-1}{\min} J(\x_0, \bu_0, \dots, \bu_{N-1}).
+J^*(\x_0) = \underset{\bu_k \in \mathcal{U}(\x_k), \:\:k=0,\dots,N-1}{\min} J(\x_0, \bu_0, \dots, \bu_{N-1}).
 \end{equation}
 \end{definition}
 
-Notice that this problem is used to compute an \textit{open-loop} control sequence $\{\bu_0, \dots, \bu_{N-1}\}$ given an initial condition $\x_0$, which is similar to the trajectory optimization problems seen in earlier chapters. However, this problem is generally quite hard to solve since there is no guarantee that the model \eqref{eq:detmodel} and cost function \eqref{eq:detcost} have any particular structure that can be leveraged to make the optimization problem amenable to numerical optimization algorithms. While it is theoretically possible to solve the problem through a brute force search over all possible combinations of sequences $\{\bu_0, \dots, \bu_{N-1}\}$, this leads to a combinatorial explosion of options and is therefore not possible in practical settings (except of course for very small problems).
+Notice that this problem is used to compute an \textit{open-loop} control sequence $\{\bu_0, \dots, \bu_{N-1}\}$ given an initial condition $\x_0$, which is similar to the trajectory optimization problems seen in earlier chapters. 
+However, this problem is generally quite hard to solve since there is no guarantee that the model \eqref{eq:detmodel} and cost function \eqref{eq:detcost} have any particular structure that can be leveraged to make the optimization problem amenable to numerical optimization algorithms. While it is theoretically possible to solve the problem through a brute force search over all possible combinations of sequences $\{\bu_0, \dots, \bu_{N-1}\}$, this leads to a combinatorial explosion of options and is therefore not possible in practical settings (except of course for very small problems).
 
 \subsubsection{Principle of Optimality (Deterministic)}
 Fortunately, there is in fact an underlying structure to the deterministic decision making problem that can be leveraged to make the problem easier to solve. This structure is commonly referred to as the \textit{principle of optimality}.
 \begin{figure}[ht]
     \centering
-    \includegraphics[width=0.5\textwidth]{tex/figs/ch22_figs/princopt1.png}
-    \caption{Starting from point $a$, let the green path $a-b-e$ be the optimal path from $a$ to $e$, with a total cost of $J^*_{ae} = J_{ab}+J_{be}$. The principle of optimality in this case says that the path $b-e$ must therefore be the optimal path when starting from point $b$. This can be proven by contradiction, since if the path $b-c-e$ had a lower cost than path $b-e$ (i.e. $J_{bce} < J_{be}$), then the original path $a-b-e$ cannot be optimal!}
+    \includegraphics[width=0.5\textwidth]{tex/figs/ch20_figs/princopt1.png}
+    \caption{Starting from point $a$, let the red path $a-b-e$ be the optimal path from $a$ to $e$, with a total cost of $J^*_{ae} = J_{ab}+J_{be}$. The principle of optimality in this case says that the path $b-e$ must therefore be the optimal path when starting from point $b$. This can be proven by contradiction, since if the path $b-c-e$ had a lower cost than path $b-e$ (i.e. $J_{bce} < J_{be}$), then the original path $a-b-e$ cannot be optimal!}
     \label{fig:princopt1}
 \end{figure}
 
@@ -67,8 +69,8 @@ b-c-f, \quad b-d-f, \quad b-e-f.
 In other words, the principle of optimality allows the search to be performed over \textit{immediate} decisions by also concatenating the optimal tail decisions! This procedure is generally implemented backward in time, for example in Figure \ref{fig:princopt2} the point $f$ (the goal) is first evaluated, then the points $c$, $d$, and $e$, and then finally the point $b$.
 \begin{figure}[ht]
     \centering
-    \includegraphics[width=0.65\textwidth]{tex/figs/ch22_figs/princopt2.png}
-    \caption{Suppose the optimal paths from points $c$, $d$ and $e$ to $f$ are known (shown in green). By using the principle of optimality, an optimal path from point $b$ to $f$ can be found by \textit{only} searching over paths from $b$ to $c$, $d$, and $f$, and determining the lowest cost from the candidates $\{J_{bc} + J^*_{cf}, J_{bd} + J^*_{df}, J_{be} + J^*_{ef}\}$. In other words, the \textit{optimal tails} can be leveraged to reduce the total number of paths that need to be considered when finding an optimal path from $b$ to $f$!}
+    \includegraphics[width=0.65\textwidth]{tex/figs/ch20_figs/princopt2.png}
+    \caption{Suppose the optimal paths from points $c$, $d$ and $e$ to $f$ are known (shown in red). By using the principle of optimality, an optimal path from point $b$ to $f$ can be found by \textit{only} searching over paths from $b$ to $c$, $d$, and $e$, and determining the lowest cost from the candidates $\{J_{bc} + J^*_{cf}, J_{bd} + J^*_{df}, J_{be} + J^*_{ef}\}$. In other words, the \textit{optimal tails} can be leveraged to reduce the total number of paths that need to be considered when finding an optimal path from $b$ to $f$!}
     \label{fig:princopt2}
 \end{figure}
 
@@ -102,8 +104,8 @@ Note that in practice the DP algorithm is not practical for continuously values 
 Consider the environment shown in Figure \ref{fig:detDPprob}, where the goal is to start at point $a$ and reach point $h$ while incurring the smallest cost. In this problem the state is represented as the current location (i.e. $a$, $b$, etc.), and the control constraints are encoded by the arrows indicating possible directions of travel (e.g. at point $c$ it is possible to either go right or up, but not down or left). The cost of traversing between two points is also denoted in Figure \ref{fig:detDPprob}.
 \begin{figure}[ht]
     \centering
-    \includegraphics[width=0.8\textwidth]{tex/figs/ch22_figs/dpexample.png}
-    \caption{A deterministic decision making problem where the goal is to move from point $a$ to point $h$ while incurring the minimal amount of cost. The green path indicates the optimal path. This problem is solved by dynamic programming in Example \ref{ex:detDP}.}
+    \includegraphics[width=0.8\textwidth]{tex/figs/ch20_figs/dpexample.png}
+    \caption{A deterministic decision making problem where the goal is to move from point $a$ to point $h$ while incurring the minimal amount of cost. The red path indicates the optimal path. This problem is solved by dynamic programming in Example \ref{ex:detDP}.}
     \label{fig:detDPprob}
 \end{figure}
 
@@ -173,7 +175,8 @@ In the stochastic decision making problem it is assumed that there is some \text
 \begin{equation} \label{eq:smodel}
 \x_{k+1}= f_k(\x_k, \bu_k, \w_k), \quad k = 0, \dots, N-1,
 \end{equation}
-where $\w_k$ represents a stochastic disturbance term. Additionally, it is assumed that this disturbance has a known conditional probability distribution $P_k(\w_k \mid \x_k, \bu_k)$. Note that it is assumed that the disturbance is only dependent on the current state $\x_k$ and control $\bu_k$, and not states from earlier in the robot's history. This is another example of the Markov assumption, which was similarly used to develop the algorithms for localization and filtering in previous chapters.
+where $\w_k$ represents a stochastic disturbance term. Additionally, it is assumed that this disturbance has a known conditional probability distribution $P_k(\w_k \mid \x_k, \bu_k)$. Note that it is assumed that the disturbance is only dependent on the current state $\x_k$ and control $\bu_k$, and not states from earlier in the robot's history. 
+This is another example of the Markov assumption, which was similarly used to develop the algorithms for localization and filtering in previous chapters.
 
 Another main difference between the stochastic decision making problem and the deterministic problem is that a control \textit{policy} is computed in the stochastic case. A control policy, usually denoted $\bu = \pi(\x)$, is a function that maps the state $\x$ to a control $\bu$, and therefore defines a closed-loop controller (whereas in the deterministic setting an open-loop sequence was computed). Generally speaking, the search for control \textit{policies} makes the problem more difficult to solve, but is typically required in stochastic settings because uncertainty would lead to undesirable behavior under open-loop control plans. Specifically, in the stochastic decision making problem the policies $\pi = \{\pi_0, \dots, \pi_{N-1}\}$ are computed, which define the controls by $\bu_k = \pi_k(\x_k)$.
 
@@ -210,7 +213,7 @@ The dynamic programming algorithm for the stochastic setting is also quite simil
 \end{algorithm}
 Once Algorithm \ref{alg:sDP} is run, the optimal policy is defined by:
 \begin{equation*}
-\pi^*_k(\x_k) = \underset{\bu_k \in \mathcal{U}(\x_k)}{\min}E_{\w_k}\big[g_k(\x_k,\bu_k,\w_k) + J_{k+1}(f_k(\x_k, \bu_k, \w_k))\big].
+\pi^*_k(\x_k) = \underset{\bu_k \in \mathcal{U}(\x_k)}{\arg \min}E_{\w_k}\big[g_k(\x_k,\bu_k,\w_k) + J_{k+1}(f_k(\x_k, \bu_k, \w_k))\big].
 \end{equation*}
 
 \begin{example}[Stochastic Dynamic Programming] \label{ex:stoDP}

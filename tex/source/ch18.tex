@@ -5,7 +5,7 @@ However, while each sensor may provide data toward a similar goal (e.g. estimati
 Using measurements from multiple sensors (potentially different types of sensors) is an effective technique for reducing the uncertainty in downstream perception and estimation tasks (see Figure \ref{fig:reduceuncertainty}).
 \begin{figure}[ht]
     \centering
-    \includegraphics[width=0.85\textwidth]{tex/figs/ch19_figs/carsensors.png}
+    \includegraphics[width=0.85\textwidth]{tex/figs/ch18_figs/carsensors.png}
     \caption{Sensor fusion can reduce uncertainty by providing more well-rounded data. For example in this scenario the radar sensor may have good accuracy longitudinally but less accuracy laterally. Contrarily, a camera may provide poor range estimation but good lateral position estimation. By fusing these two sensor measurements the resulting estimate can be accurate both longitudinally and laterally.}
     \label{fig:reduceuncertainty}
 \end{figure}
@@ -96,7 +96,7 @@ p_{t+1} \\ v_{t+1} \\ a_{t+1}
 p_{t} \\ v_{t} \\ a_{t}
 \end{bmatrix} + \bm{\epsilon}_t,
 \end{equation*}
-where the state is defined as $\x = [p, v, a]^T$, and $\bm{\epsilon}$ is Gaussian process noise.
+where the state is defined as $\x = [p, v, a]^\top $, and $\bm{\epsilon}$ is Gaussian process noise.
 
 It is assumed that the lidar and GNSS sensors directly measure the position $p$, and that the IMU directly measures the acceleration $a$, such that the measurement model is:
 \begin{equation*}
@@ -124,7 +124,7 @@ Figure \ref{fig:fusionexample} shows results of the application of the Kalman fi
 
 \begin{figure}[ht!]
     \centering
-    \includegraphics[width=0.85\textwidth]{tex/figs/ch19_figs/carKFfusion.png}
+    \includegraphics[width=0.85\textwidth]{tex/figs/ch18_figs/carKFfusion.png}
     \caption{Kalman filter sensor fusion for Example \ref{ex:car}. The position of a vehicle is estimated using noisy lidar, GNSS, and IMU data, and the resulting estimate tracks the ground truth. As can be seen, the addition of the lower-variance GNSS results in a better estimate through sensor fusion.}
     \label{fig:fusionexample}
 \end{figure}

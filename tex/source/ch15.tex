@@ -81,7 +81,7 @@ This algorithm is also outlined in Algorithm \ref{alg:particle} and a few iterat
 Note that the concept of resampling in the correction step can be quite important for reasons beyond just updating the belief for the measurement correction. In particular, without the resampling step over time some of the particles would drift to regions of low probability and there would be fewer particles to represent the regions of high probability. The resampling step can therefore be viewed as a probabilistic implementation of the Darwinian idea of survival of the fittest: it refocuses the particle set to regions in state space with high posterior probability. This helps from a computational efficiency standpoint because it reduces the number of particles that are needed by focusing them on the regions of the state space that matter (i.e. regions of high probability).
 \begin{figure}[ht]
 \centering
-\includegraphics[width=0.8\linewidth]{tex/figs/ch16_figs/particlefilter.png}
+\includegraphics[width=0.8\linewidth]{tex/figs/ch15_figs/particlefilter.png}
 \caption{Particle filter used for robot localization. The initial set of particles are first updated according to the transition model, and then weighted according to the observation. Finally, a new set of particles is generated through weighted resampling.}
 \label{fig:Particle_filter}
 \end{figure}

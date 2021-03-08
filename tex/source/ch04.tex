@@ -52,7 +52,7 @@ which are the gradients of the Lagrangian with respect to the variables $\x$ and
 \subsubsection{Necessary Optimality Conditions}
 Analogously to the Lagrangian \eqref{eq:lagrangian} in finite-dimensional optimization, the first step to defining the NOCs for the infinite-dimensional OCP \eqref{eq:ocp} is to define a function called the \textit{Hamiltonian}:
 \begin{equation} \label{eq:hamiltonian}
-H(\x(t), \bu(t), \p(t), t) := g(\x(t), \bu(t), t) + \p^T(t)a(\x(t), \ac(t), t),
+H(\x(t), \bu(t), \p(t), t) := g(\x(t), \bu(t), t) + \p^\top (t)a(\x(t), \ac(t), t),
 \end{equation}
 where $\p(t) \in \R^n$ is a multiplier referred to as a \textit{costate}. The NOCs are then given by a set of differential and algebraic equations:
 \begin{equation} \label{eq:optnoc}
@@ -65,7 +65,7 @@ where $\p(t) \in \R^n$ is a multiplier referred to as a \textit{costate}. The NO
 which must be satisfied for all $t \in [t_0, t_f]$. These NOCs consist of $2n$ first order differential equations and $m$ algebraic equations. Identifying unique solutions to the $2n$ differential equations requires $2n$ boundary conditions (actually $2n+1$ if the final time $t_f$ is not fixed). The initial condition $\x^*(t_0) = \x_0$ specifies $n$ of these conditions, and the remaining conditions are given by
 \begin{equation} \label{eq:boundarycond}
 \begin{split}
-&\big(\frac{\partial{h}}{\partial{\x}}(\x^*(t_f), t_f) - \p^*(t_f))\big)^T\delta{\x_f}\\\
+&\big(\frac{\partial{h}}{\partial{\x}}(\x^*(t_f), t_f) - \p^*(t_f))\big)^\top \delta{\x_f}\\\
 & + \big(H(\x^*(t_f), \ac^*(t_f), \p^*(t_f), t_f) +\frac{\partial{h}}{\partial{t}}(\x^*(t_f), t_f)\big)\delta t_f = 0,\\
 \end{split}
 \end{equation}
@@ -153,7 +153,7 @@ and the dynamics equation can be equivalently expressed as a first-order system 
 \dot{x}_2 &= u, \\
 \end{split}
 \end{equation*}
-such that $\x = [x_1, \: x_2]^T$ and the boundary conditions become:
+such that $\x = [x_1, \: x_2]^\top $ and the boundary conditions become:
 \begin{equation*}
 x_1(0) = 10, \quad x_2(0) = 0,\quad x_1(t_f) = 0,\quad x_2(t_f) = 0.
 \end{equation*}
@@ -244,15 +244,15 @@ The finite-dimensional problem \eqref{eq:nlp} is only an \textit{approximation} 
 
 Recall that the necessary conditions of optimality for equality-constrained finite-dimensional optimization problems have previously been discussed in Section \ref{subsubsec:constfiniteopt}. In particular, the Lagrangian is first formulated, which for \eqref{eq:nlp} takes the form:
 \begin{equation*}
-L = h(\x_N,t_N) + \sum_{i=0}^{N-1} h_i g(\x_i,\bm{u}_i,t_i) + \sum_{i=0}^{N-1} \blam_i^T(\x_{i} + h_ia(\x_i, \bu_i, t_i) - \x_{i+1}).
+L = h(\x_N,t_N) + \sum_{i=0}^{N-1} h_i g(\x_i,\bm{u}_i,t_i) + \sum_{i=0}^{N-1} \blam_i^\top (\x_{i} + h_ia(\x_i, \bu_i, t_i) - \x_{i+1}).
 \end{equation*}
 Note that even though the initial condition constraint is included in \eqref{eq:nlp} it can be ignored in the Lagrangian by simply assuming $\x_0$ is not actually a decision variable in the optimization problem (since it is fixed).
 The NOCs are then given by:
 \begin{equation} \label{eq:dirnoc}
 \begin{split}
-\nabla_{\x_i} L = h_i \frac{\partial g}{\partial \x}(\x_i, \bu_i) + h_i\big(\frac{\partial a}{\partial \x}(\x_i, \bu_i)\big)^T \blam_i + (\blam_i - \blam_{i-1}) &= 0, \quad i = 1,\dots,N-1 \\
+\nabla_{\x_i} L = h_i \frac{\partial g}{\partial \x}(\x_i, \bu_i) + h_i\big(\frac{\partial a}{\partial \x}(\x_i, \bu_i)\big)^\top  \blam_i + (\blam_i - \blam_{i-1}) &= 0, \quad i = 1,\dots,N-1 \\
 \nabla_{\x_N} L = \frac{\partial h}{\partial \x}(\x_N) - \blam_{N-1} &= 0, \\
-\nabla_{\bu_i} L = h_i \frac{\partial g}{\partial \bu}(\x_i, \bu_i) + h_i\big(\frac{\partial a}{\partial \bu}(\x_i, \bu_i)\big)^T \blam_i &= 0, \quad i = 0, \dots, N-1\\
+\nabla_{\bu_i} L = h_i \frac{\partial g}{\partial \bu}(\x_i, \bu_i) + h_i\big(\frac{\partial a}{\partial \bu}(\x_i, \bu_i)\big)^\top  \blam_i &= 0, \quad i = 0, \dots, N-1\\
 \x_{i} + h_ia(\x_i, \bu_i, t_i) - \x_{i+1} &= 0, \quad i = 0,\dots,N-1\\
 \end{split}
 \end{equation}
@@ -260,9 +260,9 @@ The NOCs are then given by:
 Now, from the indirect method with equations \eqref{eq:hamiltonian}, \eqref{eq:optnoc}, and boundary conditions \eqref{eq:boundarycond} with fixed final time and free final state, the NOCs for the infinite-dimensional OCP can be written as:
 \begin{equation} \label{eq:indinoc}
 \begin{split}
-\frac{\partial g}{\partial \x}(\x(t), \bu(t)) + \big(\frac{\partial a}{\partial \x}(\x(t), \bu(t))\big)^T \p(t) + \dot{\p}(t) &= 0, \quad t \in [t_0,t_f] \\
+\frac{\partial g}{\partial \x}(\x(t), \bu(t)) + \big(\frac{\partial a}{\partial \x}(\x(t), \bu(t))\big)^\top  \p(t) + \dot{\p}(t) &= 0, \quad t \in [t_0,t_f] \\
 \frac{\partial h}{\partial \x}(\x(t_f)) - \p(t_f) &= 0, \\
-\frac{\partial g}{\partial \bu}(\x(t), \bu(t)) + \big(\frac{\partial a}{\partial \bu}(\x(t), \bu(t))\big)^T \p(t) &= 0, \quad t \in [t_0, t_f]\\
+\frac{\partial g}{\partial \bu}(\x(t), \bu(t)) + \big(\frac{\partial a}{\partial \bu}(\x(t), \bu(t))\big)^\top  \p(t) &= 0, \quad t \in [t_0, t_f]\\
 \dot{\x}(t) - a(\x(t), \bu(t), t) &= 0, \quad t\in[t_0,t_f]\\
 \x_0 - \x(t_0) &= 0.
 \end{split}

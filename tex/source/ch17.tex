@@ -6,7 +6,7 @@ Many real-world settings are challenging for robotic autonomy because both the m
 Generally speaking there are two types of SLAM problems that can be considered. The \textit{online} SLAM problem aims to estimate the posterior $p(\x_t, \m\mid \z_{1:t}, \bu_{1:t})$ over the robot's current pose $\x_t$ and the map $\m$. Alternatively, the \textit{full} SLAM problem estimates the entire path of the robot instead of just the current position, namely $p(\x_{1:t}, \m\mid \z_{1:t}, \bu_{1:t})$. The difference between these two SLAM problems is demonstrated graphically in Figure \ref{fig:online_full_slam}. Both SLAM problems experience the same challenge: error in the pose causes error in map estimation and error in map estimation causes error in the pose estimate. In this chapter, algorithms for both the online and full SLAM problems are studied.
 \begin{figure*}[ht]
     \centering
-    \includegraphics[width=.75\textwidth]{tex/figs/ch18_figs/online_full_slam.png}
+    \includegraphics[width=.75\textwidth]{tex/figs/ch17_figs/online_full_slam.png}
     \caption{Difference between online and full SLAM, where online SLAM only estimates the current robot pose while full SLAM also estimates the robot's history.}
     \label{fig:online_full_slam}
 \end{figure*}
@@ -26,7 +26,7 @@ The main idea behind EKF SLAM is that the coordinates $(m_{i,x}, m_{i,y})$ of ea
 \x_t \\ \m_1 \\ \vdots \\ \m_N
 \end{bmatrix},
 \end{equation}
-where $\m_i = [m_{i,x}, m_{i,y}]^T$. With the new state vector $\y$ the online SLAM problem is to compute the posterior:
+where $\m_i = [m_{i,x}, m_{i,y}]^\top $. With the new state vector $\y$ the online SLAM problem is to compute the posterior:
 \begin{equation*}
 bel(\y_t) = p(\y_t \mid \z_{1:t}, \bu_{1:t}).
 \end{equation*}
@@ -61,7 +61,7 @@ The measurement model is defined in the same way as the previous chapter:
 where $\bm{\delta}_t \sim \mathcal{N}(\bm{0}, \bm{Q}_t)$ is Gaussian zero-mean noise and $j$ is the index of the map feature $m_j \in \m$ that measurement $i$ is associated with. The Jacobian is also defined in the same way with $H^{j}_t = \nabla_{\y}h(\bar{\bmu}_t,j)$, where $\bar{\bmu}_t$ is the predicted mean (that results from the EKF prediction step) of the distribution $\overline{bel}(\y_t)$.
 
 \subsubsection{EKF SLAM with Known Correspondences}
-As was the case in EKF localization, it is important to specify whether the the correspondences $c_t^i$ between the $i$-th measurement $\z_t^i$ and the associated landmark in the map is known. In this section an EKF SLAM algorithm will be developed which assumes the correspondences $\bc_t = [c_t^1, \dots ]^T$ are \textit{known}. 
+As was the case in EKF localization, it is important to specify whether the the correspondences $c_t^i$ between the $i$-th measurement $\z_t^i$ and the associated landmark in the map is known. In this section an EKF SLAM algorithm will be developed which assumes the correspondences $\bc_t = [c_t^1, \dots ]^\top $ are \textit{known}. 
 
 
 
@@ -124,7 +124,7 @@ Performing EKF SLAM when the correspondences between measurements and landmarks 
     \ForEach{$k=1$ \KwTo $N_t+1$}{
       $\hat{\z}_t^k = h(\bar{\bmu}_{t}, k)$\\
       $S_t^k = H_t^k\bar{\bSigma}_{t}[H^k_t]^{T}+\bm{Q}_t$\\
-      $d_t^{ik} = (\z_t^i-\hat{\z}^{k}_t)^T [S_t^{k}]^{-1} (\z_t^i-\hat{\z}^{k}_t)$\\
+      $d_t^{ik} = (\z_t^i-\hat{\z}^{k}_t)^\top  [S_t^{k}]^{-1} (\z_t^i-\hat{\z}^{k}_t)$\\
      }
   $d_t^{i(N_t+1)} = \alpha$\\
   $j = \arg\min_k \:\: d_t^{ik}$\\
@@ -150,9 +150,9 @@ Another important disadvantage of EKF SLAM is that its computational complexity 
 
 \begin{example}[Differential Drive Robot with Range and Bearing Measurements] \label{ex:rangeandbearingEKFSLAM}
 \theoremstyle{definition}
-Consider a differential drive robot with state $\x = [x, y, \theta]^T$, and suppose a sensor is available on the robot which measures the range $r$ and bearing $\phi$ of landmarks $m_j \in \m$ relative to the robot’s local coordinate frame. Additionally, multiple measurements corresponding to different features can be collected at each time step:
+Consider a differential drive robot with state $\x = [x, y, \theta]^\top $, and suppose a sensor is available on the robot which measures the range $r$ and bearing $\phi$ of landmarks $m_j \in \m$ relative to the robot’s local coordinate frame. Additionally, multiple measurements corresponding to different features can be collected at each time step:
 \begin{equation*}
-\z_t = \{[r_t^1,\phi_t^1]^T, [r_t^2,\phi_t^2]^T, \dots\},
+\z_t = \{[r_t^1,\phi_t^1]^\top , [r_t^2,\phi_t^2]^\top , \dots\},
 \end{equation*}
 where each measurement $\z_t^i$ contains the range $r_t^i$ and bearing $\phi_t^i$. 
 
@@ -165,7 +165,7 @@ For the SLAM problem, the augmented state $\y_t$ is defined as:
     \end{bmatrix}
     = \begin{bmatrix}
     x & y & \theta & m_{1,x} &m_{1,y} & \dots & m_{N,x} &m_{N,y}
-    \end{bmatrix}^T.
+    \end{bmatrix}^\top .
 \end{equation*}
 
 Assuming the correspondences are known, the measurement model for the range and bearing is:

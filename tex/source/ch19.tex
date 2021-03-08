@@ -14,7 +14,7 @@ Finite state machines (FSMs) define a computational modeling framework for syste
 Generally speaking, designing finite state machines for practical robotic systems can be extremely time consuming and challenging. In particular, choosing the appropriate set of states for a particular problem is required to ensure that the model is not overly complex, but the interactions and transitions between states can also be very hard to specify and can still lead to complex models. For example, consider the graphical representation of an example FSM for the popular open source flight software PX4 in Figure \ref{fig:px4fsm}. Specifying the full behavior of the system can lead to a complex FSM, even if there are not very many states. In fact, this FSM is still under continuous development to improve the overall system behavior!
 \begin{figure}[ht]
     \centering
-    \includegraphics[width=0.65\textwidth]{tex/figs/ch21_figs/px4_state_machine.png}
+    \includegraphics[width=0.65\textwidth]{tex/figs/ch19_figs/px4_state_machine.png}
     \caption{A graphical representation of a finite state machine example for the open source flight software PX4, \texttt{https://px4.io/}. As can be seen, even for a relatively small number of states the FSM can become quite complex in order to model the full behavior of the system. Image retrieved from diydrones.com.}
     \label{fig:px4fsm}
 \end{figure}
@@ -31,7 +31,7 @@ Mathematically, a finite state machine consists of:
 While FSMs can be defined through the mathematical notation above, it is often also useful to represent them graphically to get a more intuitive understanding of how the system will behave. In particular, the graph representation is defined with nodes of the graph representing each state in the set $S$. Each (directed) edge of the graph corresponds to a possible transition between states that is defined by a particular input. In other words, each directed edge is associated with a particular pair $(s, i)$. The outputs for a particular pair $(s,i)$ are also typically included along each directed edge. This is shown in more detail in Figure \ref{fig:fsm}.
 \begin{figure}[ht]
     \centering
-    \includegraphics[width=0.65\textwidth]{tex/figs/ch21_figs/fsm.png}
+    \includegraphics[width=0.65\textwidth]{tex/figs/ch19_figs/fsm.png}
     \caption{A graphical representation of a finite state machine with states $S = \{s_0, s_1, s_2\}$, inputs $I = \{i_0,i_1,i_2\}$ and outputs $O = \{o_0, o_1\}$. The directed edges correspond to the next-state functions and the output associated with each edge is defined by the output function. For example, in this FSM it can be seen that $n(i_1, s_0) \xrightarrow{} s_1$ and $o(i_1, s_0) \xrightarrow{} o_1$.}
     \label{fig:fsm}
 \end{figure}
@@ -64,7 +64,7 @@ Similarly, suppose the gate was just raised for the car to pass such that $s_t =
 A graphical representation of the full car parking gate FSM is given in Figure \ref{fig:parkinggate}.
 \begin{figure}[ht]
     \centering
-    \includegraphics[width=1\textwidth]{tex/figs/ch21_figs/parkinggate_fsm.png}
+    \includegraphics[width=1\textwidth]{tex/figs/ch19_figs/parkinggate_fsm.png}
     \caption{A graphical representation of the finite state machine for the parking gate controller discussed in Example \ref{ex:parkinggate}.}
     \label{fig:parkinggate}
 \end{figure}
@@ -150,7 +150,7 @@ In some cases there might be states that are not truly equivalent, but that migh
 \subsubsection{Compositions}
 Individual state machines can also be composed in a variety of ways depending on their input/output behavior, including \textit{cascade} compositions, \textit{parallel} compositions, and \textit{feedback} compositions. Cascade compositions combine two FSMs in sequence where the output vocabulary of one matches the input vocabulary of the other. The new state of the combined machine is the concatenation of the states of the individual FSMs (see Figure \ref{fig:cascade}). Parallel compositions run two FSMs side by side, using the same input. Both the state and output is then the concatenation of the two individual FSMs' state and output. Finally, feedback compositions use only a single FSM but only require a partial input and also reuse the output as input (requires the input and output vocabularies to be the same). \begin{marginfigure}
     \centering
-    \includegraphics[width=0.8\textwidth]{tex/figs/ch21_figs/compositions.png}
+    \includegraphics[width=0.8\textwidth]{tex/figs/ch19_figs/compositions.png}
     \caption{Cascade, parallel, and feedback compositions of finite state machines.}
     \label{fig:cascade}
 \end{marginfigure}

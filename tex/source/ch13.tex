@@ -11,7 +11,7 @@ One of the main classes of techniques for robot localization are \textit{map-bas
 For example, consider the floor plan (the environment map) in Figure \ref{fig:sample-room}: before a robot can navigate to a particular room it must know where in the building it is currently located.\footnote{Other approaches to navigate in environments include \textit{behavioral} approaches, which rely on a specified set of behaviors that will result in a desired global behavior without the need for explicit mapping or localization. An example of this approach would be to have a left-wall following behavior for movement about a building.}
 \begin{figure}[ht]
 	\centering
-    \includegraphics[width=0.9\textwidth]{tex/figs/ch14_figs/map.png}
+    \includegraphics[width=0.9\textwidth]{tex/figs/ch13_figs/map.png}
     \caption{An example environment where localization is crucial for robotic autonomy. For a robot to move from location A to location B it must first understand which room it is in, and that the only path to B is through the hallway. Extracting such global information about the environment from local measurements (e.g. from a range sensor) requires specialized algorithms.}
     \label{fig:sample-room}
 \end{figure}
@@ -19,7 +19,7 @@ For example, consider the floor plan (the environment map) in Figure \ref{fig:sa
 There are two primary components to map-based localization: map representation and belief representation. This chapter focuses on belief representation, which addresses the problem of how to best represent the robot's belief of its current position with respect to the map. One simple approach would be to simply store a best guess of the robot's position (in some map-based coordinate system). However in practice localization information is often \textit{uncertain}, and representing the belief by only a best guess does not capture this important fact. Therefore one common approach is to use a \textit{probabilistic} representation of the robot's belief since probability distributions can be used to model uncertainty (and extract best guesses, for example by finding the mean of a unimodal distribution). A variety of probabilistic representations can be used, for example singe-hypothesis or multiple-hypothesis representations as well as continuous or discrete representations. A few examples showing the differences between these types of representations are given in Figure \ref{fig:belief-representation}.
 \begin{figure}[ht!]
 	\centering
-    \includegraphics[width=0.6\textwidth]{tex/figs/ch14_figs/distributions.png}
+    \includegraphics[width=0.6\textwidth]{tex/figs/ch13_figs/distributions.png}
     \caption{A graphical representation of different types of probabilistic representations: (a) a continuous single-hypothesis belief (e.g. from a single Gaussian distribution), (b) a continuous multiple-hypothesis belief (e.g. a mixture of Gaussians), (c) discrete representation with a finite number of possible values.}
     \label{fig:belief-representation}
 \end{figure}
@@ -138,7 +138,7 @@ In the case that the random variable $X$ is a vector-valued random variable, the
 \begin{definition}[Covariance]
 The covariance between two random variables $X$ and $Y$ is denoted $\text{cov}(x,y)$ and is computed by:
 \begin{equation*}
-    \text{cov}(x,y) = E[(X-E[X])(Y-E[Y])^T] = E[XY^T] - E[X]E[Y]^T
+    \text{cov}(x,y) = E[(X-E[X])(Y-E[Y])^\top ] = E[XY^\top ] - E[X]E[Y]^\top 
 \end{equation*}
 \end{definition}
 Covariance is a metric used to describe the relationship between random variables and is positive if greater values of one variable generally corresponds to greater values of the other (and same for lesser values). Similarly, it is negative if the variables tend to show opposite behavior of each other. If there is no general relationship between the two then their covariance is zero (e.g. independent random variables have zero covariance).
@@ -177,7 +177,7 @@ p(\z_t \mid \x_{t}).
 The resulting overall model with the Markov property, consisting of the state transition probability \eqref{eq:markovprobmod} and the measurement model \eqref{eq:markovprobmod} is referred to as a Bayes network model or a hidden Markov model. Graphically this model can be represented as shown in Figure \ref{fig:hmm}, where the sequencing of the control and measurements are more clearly shown (first control, then measurement).
 \begin{figure}[ht]
 	\centering
-    \includegraphics[width=0.55\textwidth]{tex/figs/ch14_figs/hmm.png}
+    \includegraphics[width=0.55\textwidth]{tex/figs/ch13_figs/hmm.png}
     \caption{Graphical representation of the Bayes network model (hidden Markov model). Note that the sequencing assumes that the control is applied, and then a measurement is taken.}
     \label{fig:hmm}
 \end{figure}

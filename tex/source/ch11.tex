@@ -40,7 +40,7 @@ The split-and-merge algorithm is perhaps the most popular line extraction algori
 A popular variant of the split-and-merge algorithm is known as the iterative-end-point-fit algorithm. This algorithm is simply the split-and-merge algorithm given in Algorithm \ref{alg:splitmerge} where the line is simply constructed by connecting the first and the last points of the set. This approach is shown graphically in Figure \ref{fig:splitmerge}.
 \begin{figure*}[ht]
 \centering
-	\includegraphics[width=0.85\textwidth]{tex/figs/ch12_fig/iterative_end_point_fit.png}
+	\includegraphics[width=0.85\textwidth]{tex/figs/ch11_figs/iterative_end_point_fit.png}
 	\caption{Iterative-end-point-fit variation of the split-and-merge algorithm for extracting lines from data.}
 	\label{fig:splitmerge}
 \end{figure*}
@@ -66,7 +66,7 @@ Given a dataset $S$ of $N$ points, the algorithm starts by randomly selecting a 
 
 \begin{figure}[ht]
   \centering
-  \includegraphics[width=0.85\textwidth]{tex/figs/ch12_fig/ransac.png}
+  \includegraphics[width=0.85\textwidth]{tex/figs/ch11_figs/ransac.png}
 \caption{Example of the RANSAC algorithm, showing four iterations of the algorithm. If the algorithm was terminated after these four iterations, line $l_3$ would be returned since it contains the maximum number of points.}
 \label{fig:ransac-working}
 \end{figure}
@@ -98,13 +98,13 @@ In the Hough transform algorithm, each point $(x_i,y_i)$ of the set $S$ ``votes'
 Therefore it can be noted that each point in the original space space $(x,y)$ maps to a \textit{line} in the Hough space $(m,b)$ (see Figure \ref{fig:hough1}). The Hough transform algorithm exploits this fact by noting that two points on the same line in the original space will yield two \textit{intersecting} lines in Hough space. In particular, the point where they intersect in the Hough space corresponds to the parameters $m^*$ and $b^*$ that defines the line passing between the points in the original space (see Figure \ref{fig:hough2}).
 \begin{figure}[ht]
   \centering
-  \includegraphics[width=0.75\textwidth]{tex/figs/ch12_fig/hough.png}
+  \includegraphics[width=0.75\textwidth]{tex/figs/ch11_figs/hough.png}
 \caption{Each point $(x_i, y_i)$ in the original space maps to a \textit{line} in the Hough space which describes all possible parameters $m$ and $b$ that would generate a line passing through the point $(x_i, y_i)$.}
 \label{fig:hough1}
 \end{figure}
 \begin{figure}[ht]
   \centering
-  \includegraphics[width=0.75\textwidth]{tex/figs/ch12_fig/hough2.png}
+  \includegraphics[width=0.75\textwidth]{tex/figs/ch11_figs/hough2.png}
 \caption{All points on a line in the original space yield lines in the Hough space that intersect at a common point.}
 \label{fig:hough2}
 \end{figure}
@@ -118,13 +118,13 @@ x \cos \alpha + y \sin \alpha = r,
 where $(\alpha,r)$ are the new line parameters. With this representation, a point $(x_i,y_i)$ from the original space gets mapped to the polar Hough space $(\alpha,r)$ as a sinusoidal curve (see Figure \ref{fig:hough3}). An example of the Hough transform using the polar representation is given in Figure \ref{fig:hough4}.
 \begin{figure}
 \centering
-	\includegraphics[width=0.75\textwidth]{tex/figs/ch12_fig/hough3.png}
+	\includegraphics[width=0.75\textwidth]{tex/figs/ch11_figs/hough3.png}
 	\caption{Representation of a point $(x_i, y_i)$ in the Hough space when using a polar coordinate representation of a line with parameters $\alpha$ and $r$.}
 	\label{fig:hough3}
 \end{figure}
 \begin{figure}
 \centering
-	\includegraphics[width=0.85\textwidth]{tex/figs/ch12_fig/hough4.png}
+	\includegraphics[width=0.85\textwidth]{tex/figs/ch11_figs/hough4.png}
 	\caption{Example of the Hough transformation using a polar coordinate representation of lines.}
 	\label{fig:hough4}
 \end{figure}
@@ -143,7 +143,7 @@ where $(x,y)$ is the 2D Cartesian coordinate of a data point and $(\rho,\theta)$
 where $\alpha$ and $r$ are the parameters that define the line. For a visual representation of these definitions see Figure \ref{fig:polarline}.
 \begin{marginfigure}
   \centering
-  \includegraphics[width=0.85\textwidth]{tex/figs/ch12_fig/polarlinefit.png}
+  \includegraphics[width=0.85\textwidth]{tex/figs/ch11_figs/polarlinefit.png}
   \caption{Representation of a line in polar coordinates, defined by the parameters $r$ and $\alpha$ which are the distance and angle to the closest point on the line to the origin.}
   \label{fig:polarline}
 \end{marginfigure}
@@ -188,7 +188,7 @@ One solution to the scaling issue in correlation filter based template matching 
 
 \begin{figure}[ht]
   \centering
-  \includegraphics[width=0.6\textwidth]{tex/figs/ch12_fig/image_pyramid.png}
+  \includegraphics[width=0.6\textwidth]{tex/figs/ch11_figs/image_pyramid.png}
 \caption{A traditional image pyramid: each level has half the resolution (width and height), and hence a quarter of the pixels, of its parent level. Figure from Szeliski (2010) \nocite{Szeliski2010}.}
 \label{image-pyramid}
 \end{figure}
